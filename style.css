@@ -10,7 +10,6 @@
   --aero-aqua-glow: #0066CC;
   --aero-green-base: #33FF33; 
   
-  /* Variables de marca propias de Mis-Historias */
   --brand-orange-skeuo: linear-gradient(180deg, #FF9900 0%, #FF6600 50%, #FF4400 100%);
   --brand-orange-depth: #CC3300;
   
@@ -30,9 +29,8 @@ body {
   overflow-x: hidden;
 }
 
-/* Fondo Aero dinámico (burbujas sutiles) */
+/* Fondo Aero dinámico */
 .aero-background { background: var(--bg-dark-aero); background-size: cover; min-height: 100vh; }
-
 .bubbles-overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   background-image: url("https://via.placeholder.com/1920x1080?text=Bubbles");
@@ -44,7 +42,7 @@ body {
 .flex-container { display: flex; gap: 30px; margin-top: 30px; align-items: flex-start; }
 .flex-1 { flex: 1; }
 
-/* EFECTOS SKEUOMÓRFICOS GENERALES */
+/* EFECTOS SKEUOMÓRFICOS */
 .glassy-box {
   background: rgba(26, 26, 26, 0.7); backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;
@@ -61,7 +59,7 @@ body {
   border-radius: 6px; pointer-events: none;
 }
 
-/* CABECERA DARK AERO (Referencia skeuo image_4eafbe.jpg) */
+/* CABECERA DARK AERO */
 .dark-aero-header {
   background: linear-gradient(180deg, #1A1A1A 0%, #000 100%);
   border-bottom: 3px solid #FF6600; position: sticky; top: 0; z-index: 1000;
@@ -87,21 +85,6 @@ body {
 .search-container-aero input:focus { outline: none; background: rgba(0,0,0,0.5); }
 .btn-search-aero { background: url('https://via.placeholder.com/20x20?text=mag') no-repeat center; border: none; width: 30px; height: 30px; cursor: pointer; }
 
-/* Selector de Idioma Skeuo */
-.lang-selector-aero { position: relative; cursor: pointer; font-size: 12px; border-radius: 4px; }
-.lang-display { display: flex; align-items: center; gap: 5px; padding: 4px 8px; font-weight: bold; position: relative; z-index: 2; }
-.icon-help { font-size: 14px; color: #FFF; font-weight: bold; font-family: serif; }
-.arrow-down { font-size: 10px; color: #FFF; }
-
-.lang-dropdown {
-  position: absolute; top: 100%; right: 0; width: 140px; margin-top: 5px; list-style: none; padding: 10px 0; z-index: 100;
-  max-height: 200px; overflow-y: auto; background: rgba(20,20,20,0.95) !important;
-}
-.lang-dropdown::-webkit-scrollbar { width: 5px; }
-.lang-dropdown::-webkit-scrollbar-thumb { background: var(--aero-aqua-base); border-radius: 5px; }
-.lang-dropdown li { padding: 8px 15px; color: var(--pure-white); font-weight: bold; border-bottom: 1px solid #333; }
-.lang-dropdown li:hover { background: rgba(255,102,0,0.3); color: #FF9900; }
-
 /* SECCIÓN DESCUBRIR */
 .genre-title { color: var(--pure-white); font-size: 18px; margin-bottom: 15px; font-weight: bold; letter-spacing: -0.5px; margin-top: 30px; }
 .historias-aero-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
@@ -112,7 +95,7 @@ body {
 .card-title { color: var(--aero-aqua-base); font-size: 13px; font-weight: bold; text-decoration: underline; margin-top: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .card-info { font-size: 11px; color: var(--text-grey); margin-top: 2px; }
 
-/* SIDEBAR SKEUO y OPINIONES */
+/* SIDEBAR Y OPINIONES */
 .sidebar-aero { width: 320px; position: sticky; top: 80px; z-index: 50; }
 .sidebar-block { margin-bottom: 30px; padding: 20px; }
 .sidebar-aero-title { color: #FF6600; font-size: 16px; margin-bottom: 15px; font-weight: bold; letter-spacing: -0.5px; border-bottom: 1px solid #333; padding-bottom: 10px; }
@@ -125,8 +108,8 @@ body {
 .opinion-aero-text { font-size: 13px; color: var(--pure-white); line-height: 1.4; }
 .opinion-aero-author { color: var(--aero-aqua-base); font-weight: bold; text-decoration: underline; }
 
-/* FORMULARIO ESCRIBIR SKEUO */
-.aero-title-glow { color: #FF9900; text-shadow: 0 0 10px rgba(255,102,0,0.8); font-size: 28px; font-weight: bold; margin-bottom: 25px; }
+/* FORMULARIO Y TÍTULO DE HISTORIA */
+.aero-title-glow { color: #FF9900; text-shadow: 0 0 10px rgba(255,102,0,0.8); font-size: 28px; font-weight: bold; margin-bottom: 25px; line-height: 1.2; word-wrap: break-word; }
 .formulario-aero input[type="text"], .formulario-aero textarea {
   width: 100%; padding: 12px; margin-bottom: 20px;
   background: rgba(0,0,0,0.3); border: 1px solid #444; border-radius: 4px;
@@ -142,7 +125,7 @@ body {
   cursor: pointer; width: 100%; transition: all 0.2s; text-shadow: 0 1px 1px rgba(0,0,0,0.5);
 }
 
-/* --- ESTILOS PARA COMENTARIOS POR PÁRRAFO --- */
+/* COMENTARIOS POR PÁRRAFO */
 .parrafo-container { position: relative; margin-bottom: 25px; padding-right: 50px; }
 .parrafo-texto { font-size: 16px; line-height: 1.8; color: var(--pure-white); cursor: text; }
 
@@ -158,81 +141,62 @@ body {
 .parrafo-container:hover .btn-comentar-parrafo { opacity: 1; background: rgba(0, 204, 255, 0.4); transform: scale(1.05); }
 .btn-comentar-parrafo:hover { background: var(--brand-orange-skeuo); border-color: var(--brand-orange-depth); }
 
-/* --- NUEVO: CARRUSEL DE PORTADAS DARK AERO (image_4eab60.png + skeuo) --- */
+/* CARRUSEL DE PORTADAS */
 .carousel-aero-container {
-    position: relative;
-    width: 100%;
-    max-width: 300px; /* Tamaño portada skeuo estándar */
-    margin: 0 auto 30px auto;
-    border-radius: 6px;
-    border: 1px solid rgba(255,255,255,0.1);
+    position: relative; width: 100%; max-width: 300px; margin: 0 auto 30px auto;
+    border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);
     box-shadow: 0 5px 15px rgba(0,0,0,0.7), inset 0 0 10px rgba(255,255,255,0.2);
     overflow: hidden;
 }
-
-/* El brillo glossy sobre el carrusel */
 .carousel-aero-container::before {
     content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 50%;
     background: var(--glass-glossy); pointer-events: none; z-index: 2;
 }
+.carousel-viewport { width: 100%; height: 400px; object-fit: cover; display: block; position: relative; z-index: 1; }
 
-.carousel-viewport {
-    width: 100%;
-    height: 400px; /* Más alto para el modo lectura */
-    object-fit: cover;
-    display: block;
-    position: relative;
-    z-index: 1;
-}
-
-/* Flechas Skeuomórficas (Inspiración image_4eab60.png) */
 .btn-carousel-aero {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(10, 10, 10, 0.7);
-    backdrop-filter: blur(5px);
-    border: 1px solid var(--aero-aqua-base);
-    color: var(--aero-aqua-base);
-    border-radius: 5px;
-    padding: 10px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 10;
-    transition: all 0.2s;
-    box-shadow: 0 0 10px rgba(0,204,255,0.5);
-    /* El brillo skeuo sobre la flecha */
-    background-image: var(--glass-glossy);
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(10, 10, 10, 0.7); backdrop-filter: blur(5px);
+    border: 1px solid var(--aero-aqua-base); color: var(--aero-aqua-base);
+    border-radius: 5px; padding: 10px; font-size: 18px; font-weight: bold;
+    cursor: pointer; z-index: 10; transition: all 0.2s;
+    box-shadow: 0 0 10px rgba(0,204,255,0.5); background-image: var(--glass-glossy);
 }
-
-.btn-carousel-aero:hover {
-    color: var(--aero-green-base);
-    border-color: var(--aero-green-base);
-    box-shadow: 0 0 15px rgba(51,255,51,0.7);
-    background: rgba(30, 30, 30, 0.8);
-    background-image: var(--glass-glossy);
-}
-
+.btn-carousel-aero:hover { color: var(--aero-green-base); border-color: var(--aero-green-base); box-shadow: 0 0 15px rgba(51,255,51,0.7); background: rgba(30, 30, 30, 0.8); background-image: var(--glass-glossy); }
 .btn-carousel-aero.prev-portada { left: 10px; }
 .btn-carousel-aero.next-portada { right: 10px; }
 
-/* --- RESPONSIVE Y SUBIDA DE IMÁGENES --- */
+/* SUBIDA DE IMÁGENES */
 .preview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 10px; }
 .preview-img { width: 100%; height: 80px; object-fit: cover; border: 1px solid var(--aero-aqua-base); border-radius: 4px; }
 .responsive-file-input { width: 100%; background: rgba(0,0,0,0.5); padding: 10px; color: var(--pure-white); border: 1px solid #444; border-radius: 4px; cursor: pointer; }
 
 @keyframes fadeInComment { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
+/* --- RESPONSIVE OPTIMIZADO PARA MÓVILES (INCLUYE LANDSCAPE) --- */
 @media (max-width: 768px) {
-  .flex-container { flex-direction: column; }
-  .sidebar-aero { width: 100%; position: static; }
-  .aero-nav { flex-direction: column; gap: 15px; margin-left: 0; margin-top: 15px; }
+  .flex-container { flex-direction: column; margin-top: 15px; }
+  .glassy-box.p-30 { padding: 15px; } /* Menos padding = más ancho para el texto */
+  .aero-title-glow { font-size: 22px; margin-bottom: 15px; } /* Título más pequeño y ancho */
+  .parrafo-texto { font-size: 15px; } 
+  
+  .sidebar-aero { width: 100%; position: static; margin-top: 20px; }
+  .aero-nav { flex-direction: column; gap: 10px; margin-left: 0; margin-top: 10px; }
   .header-content { flex-direction: column; }
-  .nav-group-left, .nav-group-right { width: 100%; justify-content: space-between; }
+  .nav-group-left, .nav-group-right { width: 100%; justify-content: space-between; flex-wrap: wrap; }
+  
+  .search-container-aero { width: 100%; margin-top: 5px; }
   .search-container-aero input { width: 100%; }
-  .btn-comentar-parrafo { opacity: 0.8; }
-  .parrafo-container { padding-right: 45px; }
-  .carousel-aero-container { max-width: 250px; }
-  .carousel-viewport { height: 350px; }
+  
+  .btn-comentar-parrafo { opacity: 0.8; padding: 4px 8px; font-size: 11px; }
+  .parrafo-container { padding-right: 40px; margin-bottom: 20px; }
+  
+  .carousel-viewport { height: 280px; } /* Carrusel más corto en móvil */
+}
+
+/* Optimización extra para teléfonos en modo Horizontal (Landscape) */
+@media (max-height: 500px) and (orientation: landscape) {
+  .glassy-box.p-30 { padding: 10px 20px; } /* Expande el ancho utilizable de lectura */
+  .carousel-viewport { height: 200px; } /* Que no ocupe toda la pantalla al voltear */
+  .aero-title-glow { font-size: 18px; margin-bottom: 10px; }
 }
