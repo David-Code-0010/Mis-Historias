@@ -1,4 +1,4 @@
-/* style.css - MIS-HISTORIAS DARK AERO EDITION */
+/* style.css - MIS-HISTORIAS DARK AERO EDITION COMPLETADO */
 
 /* CONFIGURACIÓN DARK AERO SKEUOMÓRFICA */
 :root {
@@ -117,7 +117,7 @@ body {
 .sidebar-block { margin-bottom: 30px; padding: 20px; }
 .sidebar-aero-title { color: #FF6600; font-size: 16px; margin-bottom: 15px; font-weight: bold; letter-spacing: -0.5px; border-bottom: 1px solid #333; padding-bottom: 10px; }
 
-.opiniones-scroll { max-height: 500px; overflow-y: auto; padding-right: 10px; }
+.opiniones-scroll { max-height: 400px; overflow-y: auto; padding-right: 10px; }
 .opiniones-scroll::-webkit-scrollbar { width: 5px; }
 .opiniones-scroll::-webkit-scrollbar-thumb { background: var(--aero-aqua-base); border-radius: 5px; }
 
@@ -125,9 +125,9 @@ body {
 .opinion-aero-text { font-size: 13px; color: var(--pure-white); line-height: 1.4; }
 .opinion-aero-author { color: var(--aero-aqua-base); font-weight: bold; text-decoration: underline; }
 
-/* FORMULARIO ESCRIBIR SKEUO y PREVIEW 5 FOTOS */
+/* FORMULARIO ESCRIBIR SKEUO */
 .aero-title-glow { color: #FF9900; text-shadow: 0 0 10px rgba(255,102,0,0.8); font-size: 28px; font-weight: bold; margin-bottom: 25px; }
-.formulario-aero input, .formulario-aero textarea {
+.formulario-aero input[type="text"], .formulario-aero textarea {
   width: 100%; padding: 12px; margin-bottom: 20px;
   background: rgba(0,0,0,0.3); border: 1px solid #444; border-radius: 4px;
   color: var(--pure-white); font-family: inherit; font-size: 14px;
@@ -142,5 +142,34 @@ body {
   cursor: pointer; width: 100%; transition: all 0.2s; text-shadow: 0 1px 1px rgba(0,0,0,0.5);
 }
 
-.preview-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+/* --- ESTILOS PARA COMENTARIOS POR PÁRRAFO --- */
+.parrafo-container { position: relative; margin-bottom: 25px; padding-right: 50px; }
+.parrafo-texto { font-size: 16px; line-height: 1.8; color: var(--pure-white); }
+
+.btn-comentar-parrafo {
+  position: absolute; right: 0; top: 0;
+  background: rgba(0, 204, 255, 0.15); border: 1px solid var(--aero-aqua-base);
+  color: var(--pure-white); border-radius: 20px; padding: 5px 10px;
+  cursor: pointer; font-size: 12px; font-weight: bold;
+  opacity: 0.3; transition: all 0.2s; display: flex; align-items: center; gap: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+.parrafo-container:hover .btn-comentar-parrafo { opacity: 1; background: rgba(0, 204, 255, 0.4); transform: scale(1.05); }
+.btn-comentar-parrafo:hover { background: var(--brand-orange-skeuo); border-color: var(--brand-orange-depth); }
+
+/* --- RESPONSIVE Y SUBIDA DE IMÁGENES --- */
+.preview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 10px; }
 .preview-img { width: 100%; height: 80px; object-fit: cover; border: 1px solid var(--aero-aqua-base); border-radius: 4px; }
+.responsive-file-input { width: 100%; background: rgba(0,0,0,0.5); padding: 10px; color: var(--pure-white); border: 1px solid #444; border-radius: 4px; cursor: pointer; }
+
+@media (max-width: 768px) {
+  .flex-container { flex-direction: column; }
+  .sidebar-aero { width: 100%; position: static; }
+  .aero-nav { flex-direction: column; gap: 15px; margin-left: 0; margin-top: 15px; }
+  .header-content { flex-direction: column; }
+  .nav-group-left, .nav-group-right { width: 100%; justify-content: space-between; }
+  .search-container-aero input { width: 100%; }
+  .btn-comentar-parrafo { opacity: 0.8; }
+  .parrafo-container { padding-right: 45px; }
+}
