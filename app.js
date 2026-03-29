@@ -1,86 +1,71 @@
-// Base de datos de ejemplo
-const historias = [
+const db = [
     { 
-        id: 1, 
-        titulo: 'Ángel y Demonio', 
-        autor: 'Anna Todd',
-        capitulos: [
-            { texto: "Él era el caos personificado, una tormenta en mi mundo...", comentarios: ["Amo a Hardin!", "Esa frase es icónica"] },
-            { texto: "Sus ojos brillaban con una intensidad peligrosa.", comentarios: ["Dato curioso: el color verde es mi favorito"] }
-        ]
+        id: 1, titulo: 'Sombras Aero', autor: 'David_Code',
+        texto: "La luz azul se filtraba por las burbujas de cristal del puerto. Todo parecía brillar con una intensidad irreal.",
+        comentarios: ["¡Qué buena atmósfera!", "Me encanta el estilo visual", "Esperando el siguiente capítulo"]
     }
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Manejo de Fotos (5 máximo)
-    const inputFotos = document.getElementById('fotos-historia');
-    inputFotos.addEventListener('change', function() {
-        const preview = document.getElementById('preview-fotos');
-        preview.innerHTML = '';
-        const files = Array.from(this.files).slice(0, 5);
-        files.forEach(file => {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                preview.innerHTML += `<img src="${e.target.result}" class="preview-img">`;
-            }
-            reader.readAsDataURL(file);
+    const grid = document.getElementById('grid-historias');
+    const flowComments = document.getElementById('comentarios-flujo');
+
+    // 1. CARGAR BIBLIOTECA
+    function loadLibrary() {
+        grid.innerHTML = '';
+        db.forEach(h => {
+            grid.innerHTML += `
+                <div class="glass-panel" style="cursor:pointer" onclick="verHistoria(${h.id})">
+                    <div style="height:100px; background:rgba(255,255,255,0.05); margin-bottom:10px;"></div>
+                    <h4 style="color:var(--aero-blue)">${h.titulo}</h4>
+                    <small>Autor: ${h.autor}</small>
+                </div>`;
         });
-    });
+    }
 
-    // Función para leer y mostrar comentarios en el Sidebar
-    window.leerHistoria = (id) => {
-        const h = historias.find(item => item.id === id);
-        document.getElementById('seccion-descubrir').classList.add('hidden-aero');
-        document.getElementById('seccion-lectura').classList.remove('hidden-aero');
+    // 2. VER HISTORIA Y LLENAR SIDEBAR (COMENTARIOS)
+    window.verHistoria = (id) => {
+        const h = db.find(x => x.id === id);
+        document.getElementById('seccion-descubrir').classList.add('hidden');
+        document.getElementById('seccion-lectura').classList.remove('hidden');
         
-        const content = document.getElementById('contenido-lectura-dinamico');
-        const side = document.getElementById('opiniones-contenedor');
+        document.getElementById('texto-historia').innerHTML = `<h2>${h.titulo}</h2><br><p>${h.texto}</p>`;
         
-        content.innerHTML = `<h2>${h.titulo}</h2><br>`;
-        side.innerHTML = ''; // Limpiar sidebar para nuevos comentarios
-
-        h.capitulos.forEach(cap => {
-            // Inyectar texto
-            content.innerHTML += `<p style="margin-bottom:20px; font-size:18px;">${cap.texto}</p>`;
-            
-            // Inyectar comentarios al sidebar derecho de forma colectiva
-            cap.comentarios.forEach(c => {
-                side.innerHTML += `
-                    <div class="opinion-item">
-                        <strong>Lector anónimo:</strong><br>${c}
-                    </div>`;
-            });
+        // Llenar sidebar con mensajes de esta historia
+        flowComments.innerHTML = '';
+        h.comentarios.forEach(msg => {
+            flowComments.innerHTML += `<div class="comment-bubble"><strong>Lector:</strong> ${msg}</div>`;
         });
     };
 
-    // Navegación
+    // 3. SUBIDA DE 5 FOTOS
+    document.getElementById('post-fotos').addEventListener('change', function() {
+        const prev = document.getElementById('previsualizacion');
+        prev.innerHTML = '';
+        const files = Array.from(this.files).slice(0, 5);
+        files.forEach(f => {
+            const reader = new FileReader();
+            reader.onload = (e) => prev.innerHTML += `<img src="${e.target.result}" class="preview-box">`;
+            reader.readAsDataURL(f);
+        });
+    });
+
+    // 4. NAVEGACIÓN
     document.getElementById('btn-descubre').onclick = () => {
-        document.getElementById('seccion-descubrir').classList.remove('hidden-aero');
-        document.getElementById('seccion-lectura').classList.add('hidden-aero');
-        document.getElementById('seccion-escribir').classList.add('hidden-aero');
-        document.getElementById('opiniones-contenedor').innerHTML = '<p class="empty-msg">Entra en una historia para leer comentarios.</p>';
+        document.getElementById('seccion-descubrir').classList.remove('hidden');
+        document.getElementById('seccion-lectura').classList.add('hidden');
+        document.getElementById('seccion-escribir').classList.add('hidden');
+        flowComments.innerHTML = '<p class="empty-txt">Selecciona una historia...</p>';
     };
 
     document.getElementById('btn-crea').onclick = () => {
-        document.getElementById('seccion-descubrir').classList.add('hidden-aero');
-        document.getElementById('seccion-escribir').classList.remove('hidden-aero');
+        document.getElementById('seccion-descubrir').classList.add('hidden');
+        document.getElementById('seccion-escribir').classList.remove('hidden');
     };
 
-    // Cargar Biblioteca Inicial
-    const grid = document.getElementById('lista-historias-descubrir');
-    historias.forEach(h => {
-        grid.innerHTML += `
-            <div class="reading-glass-container" style="cursor:pointer; padding:10px;" onclick="leerHistoria(${h.id})">
-                <div style="height:120px; background:#222; margin-bottom:10px; border:1px solid #444;"></div>
-                <h4 class="orange-glow">${h.titulo}</h4>
-                <small>Por ${h.autor}</small>
-            </div>`;
-    });
-
-    // Toggle Idiomas
-    document.getElementById('lang-selector-aero').onclick = (e) => {
-        e.stopPropagation();
-        document.getElementById('lang-dropdown').classList.toggle('hidden-aero');
+    document.getElementById('lang-toggle').onclick = () => {
+        document.getElementById('lang-list').classList.toggle('hidden');
     };
-    document.onclick = () => document.getElementById('lang-dropdown').classList.add('hidden-aero');
+
+    loadLibrary();
 });
