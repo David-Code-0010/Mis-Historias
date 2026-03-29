@@ -1,201 +1,51 @@
-/* style.css */
-
-/* CONFIGURACIÓN DARK AERO SKEUOMÓRFICA */
+/* style.css - Dark Aero Optimizado */
 :root {
-  --bg-deep: #050505;
-  --bg-dark-aero: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
-  
-  --aero-aqua: #00CCFF; /* Azul neón */
-  --aero-orange: #FF9900; /* Naranja neón */
-  
-  --wattpad-orange-skeuo: linear-gradient(180deg, #FF9900 0%, #FF6600 50%, #FF4400 100%);
-  
-  --glass-glossy: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 100%);
-  --pure-white: #FFFFFF;
-  --text-grey: #AAA;
+    --aero-orange: #FF9900;
+    --aero-aqua: #00CCFF;
+    --bg-glass: rgba(15, 15, 15, 0.85);
 }
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  color: var(--pure-white);
-  line-height: 1.6;
-  background-color: var(--bg-deep);
-  position: relative;
-  overflow-x: hidden;
+    background: #000 url('https://images.unsplash.com/photo-1614850523296-e811cfbaf74a?auto=format&fit=crop&w=1350&q=80') no-repeat center fixed;
+    background-size: cover; color: white; font-family: 'Segoe UI', sans-serif; margin: 0;
 }
 
-.aero-background { background: var(--bg-dark-aero); background-size: cover; }
-
-/* Fondo Aero burbujas decorativo */
-.bubbles-overlay {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background-image: url("https://via.placeholder.com/1920x1080?text=Bubbles");
-  background-size: cover; opacity: 0.05; pointer-events: none; z-index: -1;
-}
-
-.container { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
-.hidden-aero { display: none !important; }
-.flex-container { display: flex; gap: 30px; margin-top: 30px; }
-.flex-1 { flex: 1; }
-
-/* EFECTOS SKEUOMÓRFICOS GENERALES */
 .glassy-box {
-  background: rgba(26, 26, 26, 0.7);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 6px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3), inset 0 0 10px rgba(255,255,255,0.2);
-  position: relative;
-  overflow: hidden;
+    background: var(--bg-glass); backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 20px;
 }
 
-/* Brillo burbuja sobre paneles */
-.glassy-box::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 50%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 100%);
-  border-radius: 6px; pointer-events: none;
-}
+.flex-container { display: flex; gap: 20px; margin-top: 20px; }
+.flex-1 { flex: 1; }
+.sidebar-aero { width: 320px; }
 
-/* CABECERA DARK AERO */
 .dark-aero-header {
-  background: linear-gradient(180deg, #1A1A1A 0%, #000 100%);
-  border-bottom: 3px solid #FF6600; /* Borde cromado 2012 */
-  position: sticky; top: 0; z-index: 1000; overflow: hidden;
+    background: linear-gradient(180deg, #111, #000);
+    border-bottom: 2px solid var(--aero-orange); padding: 10px 0;
 }
 
-.dark-aero-header::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 50%;
-  background: var(--glass-glossy); pointer-events: none;
-}
-
-.header-content { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; }
-
-/* Logo MisHistorias 2012 skeuo */
-.logo-aero {
-  color: var(--pure-white); font-size: 28px; font-weight: bold; letter-spacing: -1px;
-  text-shadow: 0 2px 3px rgba(0,0,0,0.5); font-family: 'Times New Roman', Times, serif;
-}
-
-.orange-glow { color: var(--aero-orange); text-shadow: 0 0 10px rgba(255,102,0,0.8); }
-
-.aero-nav { display: flex; align-items: center; justify-content: space-between; flex: 1; margin-left: 30px; }
-.nav-group-left, .nav-group-right { display: flex; align-items: center; gap: 15px; }
-
-/* Botones de texto skeuo */
-.btn-aero-text {
-  background: none; border: none; color: #EEE; font-size: 13px; font-weight: bold; cursor: pointer; padding: 5px 10px; border-radius: 4px; transition: all 0.2s;
-}
-
-.btn-aero-text:hover, .btn-aero-text.active {
-  color: var(--aero-orange); background: rgba(255,255,255,0.1); box-shadow: inset 0 0 5px rgba(255,255,255,0.2);
-}
-
-/* Buscador skeuo */
-.search-container-aero { display: flex; align-items: center; background: rgba(0,0,0,0.3); border: 1px solid #444; border-radius: 20px; overflow: hidden; }
-.search-container-aero input {
-  background: none; border: none; padding: 6px 12px; font-size: 12px; color: var(--pure-white); width: 220px; font-family: inherit;
-}
-.search-container-aero input:focus { outline: none; background: rgba(0,0,0,0.5); }
-
-/* --- SELECTOR DE IDIOMA SKEUO MEJORADO (UX) --- */
-.lang-selector-aero { position: relative; cursor: pointer; font-size: 12px; }
-.lang-display { display: flex; align-items: center; gap: 5px; padding: 4px 10px; font-weight: bold; }
-.icon-help { font-size: 14px; color: #FFF; font-weight: bold; font-family: serif; }
-
-/* Desplegable con UX mejorada: Scroll interno y contraste alto */
+/* UX Idiomas */
 .lang-dropdown {
-  position: absolute; top: 100%; right: 0; width: 140px;
-  max-height: 200px; /* UX móvil: scroll interno */
-  overflow-y: auto; margin-top: 5px; list-style: none; padding: 10px 0; z-index: 100;
-  background: rgba(0, 0, 0, 0.95) !important; /* Alto contraste */
+    position: absolute; right: 0; background: #000; border: 1px solid var(--aero-aqua);
+    max-height: 150px; overflow-y: auto; list-style: none; padding: 5px; z-index: 100;
+}
+.lang-dropdown li { padding: 8px; cursor: pointer; color: white; border-bottom: 1px solid #222; }
+.lang-dropdown li:hover { background: var(--aero-aqua); color: black; }
+
+/* Preview de Fotos */
+.preview-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 10px 0; }
+.preview-img { width: 100%; height: 80px; object-fit: cover; border: 1px solid var(--aero-orange); }
+
+/* Lectura y Comentarios */
+.paragraph-block { position: relative; margin-bottom: 25px; padding-right: 40px; }
+.btn-comment {
+    position: absolute; right: 0; top: 0; background: none; border: 1px solid var(--aero-aqua);
+    color: var(--aero-aqua); border-radius: 50%; cursor: pointer; width: 25px; height: 25px;
 }
 
-/* Scrollbar skeuo */
-.lang-dropdown::-webkit-scrollbar { width: 5px; background: rgba(0,0,0,0.5); }
-.lang-dropdown::-webkit-scrollbar-thumb { background: var(--aero-aqua); border-radius: 5px; }
-
-.lang-dropdown li {
-  padding: 8px 15px; color: var(--pure-white); font-weight: bold; border-bottom: 1px solid #222;
+.opinion-item {
+    background: rgba(255,255,255,0.05); padding: 10px; border-radius: 4px;
+    margin-bottom: 10px; font-size: 13px; border-left: 3px solid var(--aero-aqua);
 }
 
-.lang-dropdown li:hover { background: rgba(0, 204, 255, 0.3); color: var(--aero-aqua); }
-
-/* SECCIÓN DESCUBRIR Layout */
-.genre-title {
-  color: var(--pure-white); font-size: 18px; margin-bottom: 15px; font-weight: bold; letter-spacing: -0.5px; margin-top: 30px;
-}
-
-.historias-aero-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
-
-/* Card de libro skeuo */
-.historia-aero-card { position: relative; margin-bottom: 10px; transition: transform 0.2s; cursor: pointer; }
-.historia-aero-card:hover { transform: scale(1.03); }
-
-.portada-aero {
-  width: 100%; height: 260px; object-fit: cover;
-  border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 4px 6px rgba(0,0,0,0.5);
-}
-
-.card-title {
-  color: var(--aero-aqua); /* Azul aqua */
-  font-size: 13px; font-weight: bold; text-decoration: underline;
-  margin-top: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-}
-
-.card-info { font-size: 11px; color: var(--text-grey); margin-top: 2px; }
-
-/* SIDEBAR SKEUO Layout */
-.sidebar-aero { width: 300px; }
-.sidebar-block { margin-bottom: 30px; }
-.sidebar-aero-title {
-  color: var(--aero-orange); font-size: 16px; margin-bottom: 15px; font-weight: bold; letter-spacing: -0.5px;
-}
-
-/* LECTORES OPINAN (Sidebar): Dinámico */
-.opiniones-scroll { max-height: 400px; overflow-y: auto; padding-right: 10px; }
-.opiniones-scroll::-webkit-scrollbar { width: 4px; background: rgba(0,0,0,0.3); }
-.opiniones-scroll::-webkit-scrollbar-thumb { background: var(--aero-aqua); border-radius: 4px; }
-
-.empty-msg { font-size: 12px; color: var(--text-grey); font-style: italic; text-align: center; margin-top: 10px; }
-
-.opinion-aero { display: flex; gap: 10px; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-.opinion-aero-text { font-size: 12px; color: var(--text-grey); line-height: 1.4; }
-.opinion-aero-author { color: var(--aero-aqua); font-weight: bold; cursor: pointer; }
-
-/* FORMULARIO ESCRIBIR SKEUO Layout */
-.formulario-aero { padding: 30px; }
-.formulario-aero input, .formulario-aero textarea {
-  width: 100%; padding: 12px; margin-bottom: 20px;
-  background: rgba(0,0,0,0.3); border: 1px solid #444; border-radius: 4px;
-  color: var(--pure-white); font-family: inherit; font-size: 14px;
-}
-.formulario-aero textarea { height: 400px; resize: vertical; }
-
-.btn-aero-submit {
-  background: var(--wattpad-orange-skeuo); color: var(--pure-white);
-  border: 1px solid #CC6600; border-radius: 4px; padding: 12px 24px;
-  font-size: 15px; font-weight: bold; cursor: pointer; width: 100%; text-shadow: 0 1px 1px rgba(0,0,0,0.3);
-}
-
-/* --- ESTILOS DE LECTURA (Comentarios por párrafo) --- */
-.readable-paragraph { position: relative; font-size: 18px; color: #EEE; line-height: 1.8; margin-bottom: 30px; padding-right: 40px; cursor: text; }
-
-/* Burbuja skeuo 2012 para comentar */
-.btn-comment-bubble {
-  position: absolute; right: 0; top: 0;
-  background: rgba(0, 204, 255, 0.2); border: 1px solid var(--aero-aqua);
-  border-radius: 50%; color: var(--pure-white); cursor: pointer;
-  width: 30px; height: 30px; font-size: 12px;
-  transition: all 0.2s; box-shadow: 0 0 5px rgba(0,204,255,0.5);
-}
-
-.btn-comment-bubble:hover { background: rgba(0, 204, 255, 0.5); box-shadow: 0 0 10px var(--aero-aqua); }
-
-/* Input de comentario skeuo */
-.comment-input-area { display: flex; gap: 10px; margin-top: 10px; animation: fadeIn 0.3s; }
-.aero-input-small { flex: 1; padding: 5px 10px; font-size: 12px; background: rgba(0,0,0,0.5); border: 1px solid #444; color: #FFF; border-radius: 4px; }
-.btn-aero-submit-small { background: #FF6600; border: none; color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; }
-
-@keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+.hidden-aero { display: none !important; }
