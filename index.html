@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MisHistorias | Dark Aero Edition 2012</title>
+    <title>MisHistorias | Dark Aero 2026</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="aero-background">
@@ -16,90 +16,54 @@
                 <div class="nav-group-left">
                     <button id="btn-descubre" class="btn-aero-text active">Descubre</button>
                     <div class="search-container-aero">
-                        <input type="search" id="search-input" placeholder="Buscar historias...">
-                        <button class="btn-search-aero"></button>
+                        <input type="search" id="search-input" placeholder="Buscar historias o autores...">
                     </div>
                 </div>
 
                 <div class="nav-group-right">
                     <button id="btn-crea" class="btn-aero-text">Escribir</button>
-                    <button id="btn-comunidad" class="btn-aero-text">Comunidad</button>
                     
                     <div id="lang-selector-aero" class="lang-selector-aero">
                         <div class="lang-display glassy-box">
-                            <span class="icon-help">?</span>
                             <span id="current-lang">Español</span>
                             <span class="arrow-down">▼</span>
                         </div>
                         <ul id="lang-dropdown" class="lang-dropdown hidden-aero glassy-box">
-                            <li data-lang="es">Español</li>
-                            <li data-lang="en">English</li>
-                            <li data-lang="pt">Português</li>
+                            <li>Español</li><li>English</li><li>Português</li><li>Français</li>
+                            <li>Deutsch</li><li>Italiano</li><li>日本語</li><li>한국어</li><li>Русский</li>
                         </ul>
                     </div>
-                    
-                    <button class="btn-aero-glossy">Entrar</button>
                 </div>
             </nav>
         </div>
     </header>
 
     <main class="container main-content">
-        
         <section id="seccion-descubrir" class="flex-container">
             <div class="main-stories-grid flex-1">
-                <h2 class="genre-title">ROMANCE</h2>
-                <div id="lista-historias-descubrir" class="historias-aero-grid">
-                    </div>
-
-                <h2 class="genre-title">CIENCIA FICCIÓN</h2>
-                <div id="lista-historias-descubrir-scifi" class="historias-aero-grid">
-                    </div>
+                <h2 class="genre-title">BIBLIOTECA AERO</h2>
+                <div id="lista-historias-descubrir" class="historias-aero-grid"></div>
             </div>
 
             <aside class="sidebar-aero">
-                <div class="sidebar-block glassy-box p-6">
-                    <h3 class="sidebar-aero-title">HISTORIA DESTACADA</h3>
-                    <div id="historia-destacada-contenedor"></div>
-                </div>
-                <div class="sidebar-block glassy-box p-6">
+                <div class="sidebar-block glassy-box">
                     <h3 class="sidebar-aero-title">LECTORES OPINAN</h3>
-                    <div id="opiniones-contenedor"></div>
+                    <div id="opiniones-contenedor" class="opiniones-scroll">
+                        <p class="empty-msg">Selecciona una historia para ver los comentarios.</p>
+                    </div>
                 </div>
             </aside>
         </section>
 
         <section id="seccion-escribir" class="hidden-aero">
             <div class="write-container glassy-box">
-                <div class="write-header">
-                    <h2 class="aero-title-glow">Nueva Obra Maestra</h2>
-                    <p class="aero-subtitle">Comparte tu historia con el mundo (Estilo 2012)</p>
-                </div>
-                
+                <h2 class="aero-title-glow">Publicar Nueva Historia</h2>
                 <form id="formulario-historia" class="formulario-aero">
-                    <div class="input-group">
-                        <label for="titulo-historia">Título de la historia:</label>
-                        <input type="text" id="titulo-historia" placeholder="Ej: Mi amor de Wattpad" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="categoria-historia">Categoría:</label>
-                        <select id="categoria-historia" class="aero-select">
-                            <option value="romance">Romance</option>
-                            <option value="scifi">Ciencia Ficción</option>
-                            <option value="paranormal">Paranormal</option>
-                            <option value="humor">Humor</option>
-                        </select>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="contenido-historia">Capítulo 1:</label>
-                        <textarea id="contenido-historia" placeholder="Había una vez en un mundo Dark Aero..." required></textarea>
-                    </div>
-
+                    <input type="text" id="titulo-historia" placeholder="Título" required>
+                    <textarea id="contenido-historia" placeholder="Escribe tu primer párrafo aquí..." required></textarea>
+                    <p style="font-size: 10px; color: #0cf;">* Por ahora se asignarán imágenes Aero por defecto.</p>
                     <div class="form-actions">
-                        <button type="button" class="btn-aero-text" id="btn-cancelar">Cancelar</button>
-                        <button type="submit" class="btn-aero-submit">Publicar Historia</button>
+                        <button type="submit" class="btn-aero-submit">PUBLICAR</button>
                     </div>
                 </form>
             </div>
@@ -107,15 +71,11 @@
 
         <section id="seccion-lectura" class="hidden-aero">
             <div class="reading-container glassy-box">
-                <button id="btn-volver" class="btn-aero-text">← Volver al inicio</button>
-                <div id="contenido-lectura-dinamico">
-                    </div>
+                <button id="btn-volver" class="btn-aero-text">← Volver</button>
+                <div id="contenido-lectura-dinamico"></div>
             </div>
         </section>
-
     </main>
-
-    <div class="bubbles-overlay"></div>
 
     <script src="app.js"></script>
 </body>
