@@ -1,110 +1,122 @@
-let stories = [
+// app.js
+
+// --- BASE DE DATOS LOCAL SKEUOMÓRFICA (Estilo 2012) ---
+// Placeholders de 5 imágenes skeuo para la destacada
+const stories = [
     { 
         id: 1, 
         title: 'Ángel y Demonio', 
         author: 'Anna Todd', 
-        images: [
-            'https://via.placeholder.com/200x300/001/0cf?text=Img+1',
-            'https://via.placeholder.com/200x300/002/0cf?text=Img+2',
-            'https://via.placeholder.com/200x300/003/0cf?text=Img+3'
+        category: 'romance',
+        // Carrusel de portadas skeuo (placeholders)
+        covers: [
+            'https://via.placeholder.com/200x300?text=Cover+1',
+            'https://via.placeholder.com/200x300?text=Cover+2',
+            'https://via.placeholder.com/200x300?text=Cover+3'
         ],
-        currentImg: 0,
-        content: ["Él era el caos personificado...", "Sus ojos brillaban neón."],
-        comments: { 0: ["Increíble inicio", "Amo esto"], 1: ["Ese color es Dark Aero!"] }
-    }
+        // Texto de lectura con comentarios reales de lectores por renglón/párrafo
+        content: [
+            { text: "Él era el caos personificado, una tormenta negra en mi mundo perfecto.", comments: ["Increíble inicio!", "OMG Amo"] },
+            { text: "Sus ojos brillaban con ese verde neón que tanto me aterraba y me atraía.", comments: ["Ese neón Aero!"] },
+            { text: "Cerré la puerta de la habitación, sabiendo que mi vida nunca sería la misma.", comments: ["Postea ya!", "F"] }
+        ]
+    },
+    { id: 2, title: 'ROMPIENDO REGLAS', author: 'Ariana Godoy', category: 'romance', covers: ['https://via.placeholder.com/200x300?text=Rules'], content: [{ text: "Regla número uno: No te enamores." }] }
 ];
 
-// --- RENDERIZADO CON CARRUSEL ---
-function renderHome(data) {
-    const grid = document.getElementById('lista-historias-descubrir');
-    grid.innerHTML = '';
-    data.forEach(story => {
-        const card = document.createElement('div');
-        card.className = 'historia-aero-card';
-        card.innerHTML = `
-            <div class="product-image-container">
-                <img src="${story.images[story.currentImg]}" class="portada-aero" onclick="openStory(${story.id})">
-                <button class="carousel-btn btn-prev" onclick="changeImg(${story.id}, -1, event)">◀</button>
-                <button class="carousel-btn btn-next" onclick="changeImg(${story.id}, 1, event)">▶</button>
-            </div>
-            <h3 onclick="openStory(${story.id})">${story.title}</h3>
-        `;
-        grid.appendChild(card);
-    });
+// --- SELECTORES ---
+const sections = { descubri: document.getElementById('seccion-descubrir'), escribi: document.getElementById('seccion-escribir'), lectura: document.getElementById('seccion-lectura') };
+const navButtons = { descubre: document.getElementById('btn-descubre'), crea: document.getElementById('btn-crea'), volver: document.getElementById('btn-volver') };
+const searchInput = document.getElementById('search-input');
+const opinionesContenedor = document.getElementById('opiniones-contenedor');
+
+// --- NAVEGACIÓN Layout ---
+function showSection(targetKey) {
+    Object.keys(sections).forEach(key => sections[key].classList.add('hidden-aero'));
+    sections[targetKey].classList.remove('hidden-aero');
+    // UX: Limpiar Sidebar al salir de lectura
+    if(targetKey !== 'lectura') opinionesContenedor.innerHTML = '<p class="empty-msg">Selecciona una historia...</p>';
 }
 
-window.changeImg = function(id, dir, e) {
-    e.stopPropagation();
-    const story = stories.find(s => s.id === id);
-    story.currentImg = (story.currentImg + dir + story.images.length) % story.images.length;
-    renderHome(stories);
-};
+navButtons.descubre.addEventListener('click', () => { showSection('descubri'); renderHome(); });
+navButtons.crea.addEventListener('click', () => showSection('escribi'));
+navButtons.volver.onclick = () => showSection('descubri');
 
-// --- BUSCADOR ---
-document.getElementById('search-input').addEventListener('keypress', (e) => {
-    if(e.key === 'Enter') {
-        const term = e.target.value.toLowerCase();
-        const filtered = stories.filter(s => s.title.toLowerCase().includes(term));
-        renderHome(filtered);
+// --- LÓGICA DEL BUSCADOR (Enter) ---
+searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        const termino = searchInput.value.toLowerCase();
+        const historiasFiltradas = stories.filter(s => s.title.toLowerCase().includes(termino));
+        showSection('descubri');
+        renderHome(historiasFiltradas);
     }
 });
 
-// --- LECTURA Y SIDEBAR ---
+// --- FUNCIÓN: ABRIR HISTORIA & CARGAR SIDEBAR DINÁMICO ---
 function openStory(id) {
     const story = stories.find(s => s.id === id);
-    const container = document.getElementById('contenido-lectura-dinamico');
-    const side = document.getElementById('opiniones-contenedor');
+    const containerLectura = document.getElementById('contenido-lectura-dinamico');
     
-    container.innerHTML = `<h1 class="aero-title-glow">${story.title}</h1>`;
-    side.innerHTML = ''; // Limpiar sidebar
-
-    story.content.forEach((p, i) => {
-        // Cargar comentarios existentes en el sidebar
-        if(story.comments[i]) {
-            story.comments[i].forEach(msg => {
-                side.innerHTML += `<div class="comment-sidebar-item"><b>Párrafo ${i+1}:</b> ${msg}</div>`;
+    // 1. Limpiar y Cargar Sidebar: LECTORES OPINAN reales
+    opinionesContenedor.innerHTML = '';
+    let opinionesHtml = '';
+    story.content.forEach((paragraph, index) => {
+        if(paragraph.comments && paragraph.comments.length > 0) {
+            paragraph.comments.forEach(msg => {
+                opinionesHtml += `
+                    <div class="opinion-aero">
+                        <p class="opinion-aero-text">
+                            <span class="opinion-aero-author">Párrafo ${index + 1} lector</span>: ${msg}
+                        </p>
+                    </div>`;
             });
         }
-        
-        container.innerHTML += `
-            <div class="paragraph-container">
-                <p>${p}</p>
-                <button class="btn-comment-bubble" onclick="toggleCommentBox(${i})">💬</button>
-                <div id="comment-box-${i}" class="comment-input-area hidden-aero">
-                    <input type="text" id="input-${i}" class="aero-input-small">
-                    <button onclick="addComment(${story.id}, ${i})">Post</button>
+    });
+    opinionesContenedor.innerHTML = opinionesHtml || '<p class="empty-msg">Aún no hay comentarios.</p>';
+
+    // 2. Cargar Modo Lectura skeuo con burbujas
+    containerLectura.innerHTML = `<h1 class="aero-title-glow mb-10">${story.title}</h1>`;
+    story.content.forEach((paragraph, index) => {
+        containerLectura.innerHTML += `
+            <div class="readable-paragraph">
+                <p>${paragraph.text}</p>
+                <button class="btn-comment-bubble" onclick="toggleCommentBox(${index})">💬</button>
+                <div id="comment-box-${index}" class="comment-input-area hidden-aero">
+                    <input type="text" placeholder="Escribe..." class="aero-input-small">
+                    <button class="btn-aero-submit-small">Post</button>
                 </div>
             </div>`;
     });
     showSection('lectura');
 }
 
-window.addComment = function(storyId, pIndex) {
-    const val = document.getElementById(`input-${pIndex}`).value;
-    if(!val) return;
-    const story = stories.find(s => s.id === storyId);
-    if(!story.comments[pIndex]) story.comments[pIndex] = [];
-    story.comments[pIndex].push(val);
-    openStory(storyId); // Refrescar para ver el comentario en el sidebar
+// Lógica de burbujas
+window.toggleCommentBox = function(index) {
+    document.getElementById(`comment-box-${index}`).classList.toggle('hidden-aero');
 };
 
-// --- NAVEGACIÓN BÁSICA ---
-function showSection(id) {
-    document.querySelectorAll('section').forEach(s => s.classList.add('hidden-aero'));
-    document.getElementById(`seccion-${id}`).classList.remove('hidden-aero');
-    if(id === 'descubrir') {
-        document.getElementById('opiniones-contenedor').innerHTML = '<p class="empty-msg">Selecciona una historia...</p>';
-    }
+// --- RENDERIZADO DE PORTADAS CON CARRUSEL Layout ---
+function renderHome(listaABuscar = stories) {
+    const grid = document.getElementById('lista-historias-descubrir');
+    grid.innerHTML = '';
+    listaABuscar.forEach(story => {
+        const card = document.createElement('div');
+        card.className = 'historia-aero-card glassy-box p-4';
+        card.innerHTML = `
+            <img src="${story.covers[0]}" class="portada-aero" onclick="openStory(${story.id})">
+            <h3 class="card-title">${story.title}</h3>
+            <p class="card-info">${story.author}</p>
+        `;
+        grid.appendChild(card);
+    });
 }
 
-document.getElementById('btn-descubre').onclick = () => showSection('descubrir');
-document.getElementById('btn-crea').onclick = () => showSection('escribir');
-document.getElementById('btn-volver').onclick = () => showSection('descubrir');
-
-// --- IDIOMAS ---
+// --- IDIOMAS Lógica con UX Mejorada ---
 const langBtn = document.getElementById('lang-selector-aero');
 const langMenu = document.getElementById('lang-dropdown');
 langBtn.onclick = (e) => { e.stopPropagation(); langMenu.classList.toggle('hidden-aero'); };
 document.onclick = () => langMenu.classList.add('hidden-aero');
+langMenu.onclick = (e) => { if(e.target.tagName === 'LI') document.getElementById('current-lang').textContent = e.target.textContent; };
 
-renderHome(stories);
+// Inicialización
+renderHome();
