@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Historias Edition</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="container header-content">
+            <h1 class="logo">MisHistorias</h1>
+            <nav>
+                <button id="btn-ver-historias" class="active">Descubrir</button>
+                <button id="btn-crear-historia">Escribir</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="seccion-ver">
+            <h2 class="section-title">Historias Recomendadas</h2>
+            <div id="lista-historias" class="historias-grid">
+                </div>
+        </section>
+
+        <section id="seccion-crear" class="hidden">
+            <h2 class="section-title">Detalles de tu Historia</h2>
+            <form id="formulario-historia" class="formulario-elaborado">
+                
+                <div class="input-group">
+                    <label>Título de la obra</label>
+                    <input type="text" id="titulo-historia" placeholder="Ej: Atrapada en la mafia" required>
+                </div>
+
+                <div class="input-group">
+                    <label>URL de la Portada (Link de una imagen)</label>
+                    <input type="url" id="portada-historia" placeholder="https://ejemplo.com/imagen.jpg">
+                </div>
+
+                <div class="input-group">
+                    <label>URL de YouTube (Música de fondo para el capítulo)</label>
+                    <input type="url" id="musica-historia" placeholder="https://www.youtube.com/watch?v=...">
+                </div>
+
+                <div class="input-group">
+                    <label>Contenido del capítulo</label>
+                    <textarea id="contenido-historia" placeholder="Escribe tu historia aquí..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn-guardar">Publicar Capítulo</button>
+            </form>
+        </section>
+
+        <section id="seccion-leer" class="hidden">
+            <button id="btn-volver" class="btn-volver">← Volver al inicio</button>
+            <div id="lector-contenedor" class="lector-estilo-wattpad">
+                </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
