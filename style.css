@@ -1,42 +1,241 @@
-/* RESETEO BÁSICO */
+/* style.css */
+
+/* CONFIGURACIÓN DARK AERO SKEUOMÓRFICA */
+:root {
+  --bg-deep: #050505;
+  --bg-dark-grey: #1a1a1a;
+  --bg-dark-aero: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+  
+  --aero-aqua-base: #00CCFF;
+  --aero-aqua-glow: #0066CC;
+  --aero-green-base: #33FF33; /* Estilo Alienware */
+  
+  --wattpad-orange-skeuo: linear-gradient(180deg, #FF9900 0%, #FF6600 50%, #FF4400 100%);
+  --wattpad-orange-depth: #CC3300;
+  
+  --glass-glossy: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 100%);
+  --pure-white: #FFFFFF;
+  --text-grey: #AAA;
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f4f4f4; color: #333; }
-.container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
-.hidden { display: none !important; }
 
-/* CABECERA (El clásico naranja) */
-header { background-color: #FF6B35; padding: 15px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-.header-content { display: flex; justify-content: space-between; align-items: center; }
-.logo { color: white; font-size: 28px; font-weight: bold; letter-spacing: -1px; }
-nav button { background: none; border: none; color: rgba(255,255,255,0.8); font-size: 16px; font-weight: bold; margin-left: 20px; cursor: pointer; padding: 5px 0; transition: color 0.3s; }
-nav button:hover, nav button.active { color: white; border-bottom: 2px solid white; }
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: var(--pure-white);
+  line-height: 1.6;
+  background-color: var(--bg-deep);
+  position: relative;
+  overflow-x: hidden;
+}
 
-/* GRID DE HISTORIAS (Estilo libros) */
-main { padding: 40px 0; }
-.section-title { font-size: 22px; margin-bottom: 25px; color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-.historias-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 30px; }
+/* Fondo Aero dinámico (burbujas sutiles) */
+.aero-background {
+  background: var(--bg-dark-aero);
+  background-size: cover;
+}
 
-.historia-card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.2s; }
-.historia-card:hover { transform: translateY(-5px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
-.portada-miniatura { width: 100%; height: 300px; object-fit: cover; background-color: #ddd; }
-.card-info { padding: 15px; }
-.card-info h3 { font-size: 16px; margin-bottom: 5px; color: #222; }
-.card-info p { font-size: 13px; color: #777; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.bubbles-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background-image: url("https://via.placeholder.com/1920x1080?text=Bubbles"); /* Reemplazar por patrón de burbujas skeuo */
+  background-size: cover;
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: -1;
+}
 
-/* FORMULARIO ELABORADO */
-.formulario-elaborado { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-.input-group { margin-bottom: 20px; }
-.input-group label { display: block; font-weight: bold; margin-bottom: 8px; color: #555; font-size: 14px; }
-.formulario-elaborado input, .formulario-elaborado textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; font-size: 15px; }
-.formulario-elaborado textarea { height: 400px; resize: vertical; line-height: 1.5; }
-.btn-guardar { background-color: #FF6B35; color: white; border: none; padding: 15px 30px; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; }
-.btn-guardar:hover { background-color: #e05b29; }
+.container { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+.hidden-aero { display: none !important; }
+.flex-container { display: flex; gap: 30px; margin-top: 30px; }
+.flex-1 { flex: 1; }
 
-/* MODO LECTURA (Súper inmersivo) */
-.btn-volver { background: none; border: none; color: #FF6B35; font-weight: bold; cursor: pointer; margin-bottom: 20px; font-size: 16px; }
-.btn-volver:hover { text-decoration: underline; }
-.lector-estilo-wattpad { background: white; padding: 50px 80px; border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.05); max-width: 800px; margin: 0 auto; }
-.lector-portada { width: 100%; max-height: 400px; object-fit: cover; border-radius: 8px; margin-bottom: 30px; }
-.lector-titulo { font-size: 32px; font-weight: bold; text-align: center; margin-bottom: 20px; color: #111; }
-.lector-musica { text-align: center; margin-bottom: 40px; }
-.lector-contenido { font-family: 'Georgia', serif; font-size: 18px; line-height: 1.8; color: #222; white-space: pre-wrap; }
+/* EFECTOS SKEUOMÓRFICOS GENERALES */
+.glassy-box {
+  background: rgba(26, 26, 26, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3), inset 0 0 10px rgba(255,255,255,0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Brillo de burbuja sobre paneles */
+.glassy-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 50%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 100%);
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+/* CABECERA DARK AERO */
+.dark-aero-header {
+  background: linear-gradient(180deg, #1A1A1A 0%, #000 100%);
+  border-bottom: 3px solid #FF6600; /* Borde cromado naranja de 2012 */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+
+.dark-aero-header::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 50%;
+  background: var(--glass-glossy); pointer-events: none;
+}
+
+.header-content { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; }
+
+/* Logo MisHistorias 2012 skeuo */
+.logo-aero {
+  color: var(--pure-white);
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: -1px;
+  text-shadow: 0 2px 3px rgba(0,0,0,0.5);
+  font-family: 'Times New Roman', Times, serif; /* Nostálgico 2012 */
+}
+
+.orange-glow {
+  color: #FF9900;
+  text-shadow: 0 0 10px rgba(255,102,0,0.8);
+}
+
+.aero-nav { display: flex; align-items: center; justify-content: space-between; flex: 1; margin-left: 30px; }
+.nav-group-left, .nav-group-right { display: flex; align-items: center; gap: 15px; }
+
+/* Botones de texto skeuo */
+.btn-aero-text {
+  background: none; border: none; color: #EEE; font-size: 13px; font-weight: bold; cursor: pointer; padding: 5px 10px; border-radius: 4px; transition: all 0.2s;
+}
+
+.btn-aero-text:hover, .btn-aero-text.active {
+  color: #FF9900;
+  background: rgba(255,255,255,0.1);
+  box-shadow: inset 0 0 5px rgba(255,255,255,0.2);
+}
+
+/* Buscador skeuo */
+.search-container-aero { display: flex; align-items: center; background: rgba(0,0,0,0.3); border: 1px solid #444; border-radius: 20px; overflow: hidden; }
+.search-container-aero input {
+  background: none; border: none; padding: 6px 12px; font-size: 12px; color: var(--pure-white); width: 180px; font-family: inherit;
+}
+.search-container-aero input:focus { outline: none; background: rgba(0,0,0,0.5); }
+.btn-search-aero { background: url('https://via.placeholder.com/20x20?text=mag') no-repeat center; border: none; width: 30px; height: 30px; cursor: pointer; }
+
+/* Botones con Brillo Glossy (Skeuomorphic) */
+.btn-aero-glossy {
+  background: linear-gradient(180deg, #FFFFFF 0%, #CCC 100%);
+  color: #333;
+  border: 1px solid #AAA;
+  border-bottom: 2px solid #888; /* 3D depth */
+  border-radius: 4px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-aero-glossy:hover {
+  background: linear-gradient(180deg, #F9F9F9 0%, #F1F1F1 100%);
+}
+
+.btn-aero-glossy.active {
+  background: var(--wattpad-orange-skeuo);
+  color: var(--pure-white);
+  border-color: #CC6600;
+  border-bottom-color: var(--wattpad-orange-depth);
+  text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+}
+
+/* Selector de Idioma Skeuo */
+.lang-selector-aero { position: relative; cursor: pointer; font-size: 12px; }
+.lang-display { display: flex; align-items: center; gap: 5px; padding: 4px 8px; font-weight: bold; }
+.icon-help { font-size: 14px; color: #FFF; font-weight: bold; font-family: serif; }
+.arrow-down { font-size: 10px; color: #FFF; }
+
+.lang-dropdown {
+  position: absolute; top: 100%; right: 0; width: 120px;
+  margin-top: 5px; list-style: none; padding: 10px 0; z-index: 100;
+}
+.lang-dropdown li { padding: 5px 15px; color: var(--pure-white); font-weight: bold; }
+.lang-dropdown li:hover { background: rgba(255,102,0,0.3); }
+
+/* SECCIÓN DESCUBRIR (Clon layout 2012) */
+.genre-title {
+  color: var(--pure-white);
+  font-size: 18px;
+  margin-bottom: 15px;
+  font-weight: bold;
+  letter-spacing: -0.5px;
+  margin-top: 30px;
+}
+
+.historias-aero-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+
+/* Card de libro skeuo */
+.historia-aero-card { position: relative; margin-bottom: 10px; transition: transform 0.2s; cursor: pointer; }
+.historia-aero-card:hover { transform: scale(1.03); }
+
+.portada-aero {
+  width: 100%; height: 260px; object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+}
+
+.card-title {
+  color: #00CCFF; /* Azul aqua luminosa típica */
+  font-size: 13px; font-weight: bold; text-decoration: underline;
+  margin-top: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+
+.card-info { font-size: 11px; color: var(--text-grey); margin-top: 2px; }
+
+/* SIDEBAR SKEUO */
+.sidebar-aero { width: 300px; }
+.sidebar-block { margin-bottom: 30px; }
+.sidebar-aero-title {
+  color: #FF6600;
+  font-size: 16px; margin-bottom: 15px; font-weight: bold; letter-spacing: -0.5px;
+}
+
+/* Bloque destacada skeuo */
+.destacada-card { display: flex; gap: 15px; }
+.portada-destacada-aero { width: 80px; height: 120px; object-fit: cover; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+.destacada-info h4 { font-size: 14px; color: #00CCFF; text-decoration: underline; margin-bottom: 5px; }
+.destacada-info p { font-size: 12px; color: var(--text-grey); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.destacada-info .mas-destacada { font-size: 12px; color: #00CCFF; font-weight: bold; cursor: pointer; text-decoration: underline; }
+
+/* Bloque opiniones skeuo */
+.opinion-aero { display: flex; gap: 10px; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+.avatar-aero { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #EEE; box-shadow: inset 0 0 5px rgba(0,0,0,0.1); }
+.opinion-aero-text { font-size: 12px; color: var(--text-grey); }
+.opinion-aero-author { color: #00CCFF; font-weight: bold; text-decoration: underline; cursor: pointer; }
+
+/* FORMULARIO ESCRIBIR SKEUO */
+.aero-title-glow { color: #FF9900; text-shadow: 0 0 10px rgba(255,102,0,0.8); font-size: 28px; font-weight: bold; margin-bottom: 25px; }
+.formulario-aero { padding: 30px; }
+.formulario-aero input, .formulario-aero textarea {
+  width: 100%; padding: 12px; margin-bottom: 20px;
+  background: rgba(0,0,0,0.3); border: 1px solid #444; border-radius: 4px;
+  color: var(--pure-white); font-family: inherit; font-size: 14px;
+}
+.formulario-aero input:focus, .formulario-aero textarea:focus {
+  outline: none; border-color: #00CCFF; box-shadow: 0 0 10px rgba(0,204,255,0.3);
+}
+.formulario-aero textarea { height: 400px; resize: vertical; }
+
+.btn-aero-submit {
+  background: var(--wattpad-orange-skeuo);
+  color: var(--pure-white);
+  border: 1px solid #CC6600;
+  border-bottom: 2px solid var(--wattpad-orange-depth);
+  border-radius: 4px; padding: 12px 24px;
+  font-size: 15px; font-weight: bold;
+  cursor: pointer; width: 100%;
+  transition: all 0.2s;
+}
