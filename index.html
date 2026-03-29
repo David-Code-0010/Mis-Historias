@@ -17,7 +17,7 @@
                 <div class="nav-group-left">
                     <button id="btn-descubre" class="btn-aero-text active">Descubre</button>
                     <div class="search-container-aero">
-                        <input type="search" id="search-input" placeholder="Buscar historias...">
+                        <input type="search" id="search-input" placeholder="Buscar historias o autores... (Enter)">
                         <button class="btn-search-aero"></button>
                     </div>
                 </div>
@@ -65,9 +65,14 @@
 
             <aside id="sidebar-derecho" class="sidebar-aero">
                 <div class="sidebar-block glassy-box">
-                    <h3 class="sidebar-aero-title">LECTORES OPINAN ✨</h3>
+                    <h3 id="titulo-opiniones" class="sidebar-aero-title">LECTORES OPINAN ✨</h3>
                     <div id="opiniones-contenedor" class="opiniones-scroll">
                         <p class="empty-msg" style="color:var(--text-grey); font-size:12px; font-style:italic;">Selecciona una historia para ver los comentarios.</p>
+                    </div>
+
+                    <div id="caja-escribir-comentario" class="hidden-aero mt-10" style="border-top: 1px solid #333; padding-top: 15px;">
+                        <input type="text" id="input-nuevo-comentario" placeholder="Escribe tu comentario..." style="width: 100%; padding: 8px; background: rgba(0,0,0,0.5); border: 1px solid var(--aero-aqua-base); color: var(--pure-white); border-radius: 4px; margin-bottom: 8px; font-size: 13px;">
+                        <button id="btn-enviar-comentario" class="btn-aero-submit" style="padding: 8px; font-size: 13px;">ENVIAR</button>
                     </div>
                 </div>
             </aside>
@@ -81,11 +86,11 @@
                     
                     <div class="upload-zone mb-20">
                         <label style="color:var(--aero-aqua-base); font-size:14px; font-weight:bold; display:block; margin-bottom:10px;">Sube hasta 5 fotos (Portadas o Escenas):</label>
-                        <input type="file" id="fotos-historia" accept="image/*" multiple style="background:rgba(0,0,0,0.5); padding:10px;">
+                        <input type="file" id="fotos-historia" accept="image/*" multiple class="responsive-file-input">
                         <div id="preview-fotos" class="preview-grid mt-10"></div>
                     </div>
 
-                    <textarea id="contenido-historia" placeholder="Escribe el contenido aquí..." required></textarea>
+                    <textarea id="contenido-historia" placeholder="Escribe el contenido aquí. Usa 'Enter' para crear nuevos párrafos comentables..." required></textarea>
                     <button type="submit" class="btn-aero-submit">PUBLICAR HISTORIA</button>
                 </form>
             </div>
