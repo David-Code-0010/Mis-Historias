@@ -3,62 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis Historias Edition</title>
+    <title>MisHistorias | The Dark Aero Edition (Estilo 2012)</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="aero-background">
 
-    <header>
+    <header class="dark-aero-header">
         <div class="container header-content">
-            <h1 class="logo">MisHistorias</h1>
-            <nav>
-                <button id="btn-ver-historias" class="active">Descubrir</button>
-                <button id="btn-crear-historia">Escribir</button>
+            <h1 class="logo-aero">mis<span class="orange-glow">historias</span></h1>
+            
+            <nav class="aero-nav">
+                <div class="nav-group-left">
+                    <button id="btn-descubre" class="btn-aero-text active">Descubre</button>
+                    <div class="search-container-aero">
+                        <input type="search" id="search-input" placeholder="Buscar historias...">
+                        <button class="btn-search-aero"></button>
+                    </div>
+                </div>
+
+                <div class="nav-group-right">
+                    <button id="btn-crea" class="btn-aero-text">Crea</button>
+                    <button id="btn-comunidad" class="btn-aero-text">Comunidad</button>
+                    <button id="btn-registrate" class="btn-aero-glossy">Regístrate</button>
+                    <button id="btn-entrar" class="btn-aero-glossy active">Entrar</button>
+                    
+                    <div id="lang-selector-aero" class="lang-selector-aero">
+                        <div class="lang-display glassy-box">
+                            <span class="icon-help">?</span>
+                            <span id="current-lang">Español</span>
+                            <span class="arrow-down"></span>
+                        </div>
+                        <ul id="lang-dropdown" class="lang-dropdown hidden-aero glassy-box">
+                            <li data-lang="es">Español</li>
+                            <li data-lang="en">English</li>
+                            <li data-lang="pt">Português</li>
+                        </ul>
+                    </div>
+                </div>
             </nav>
         </div>
     </header>
 
     <main class="container">
-        <section id="seccion-ver">
-            <h2 class="section-title">Historias Recomendadas</h2>
-            <div id="lista-historias" class="historias-grid">
+        <section id="seccion-descubrir" class="flex-container">
+            <div class="main-stories-grid flex-1">
+                
+                <h2 class="genre-title">ROMANCE</h2>
+                <div id="lista-historias-descubrir" class="historias-aero-grid">
+                    </div>
+
+                <h2 class="genre-title">CIENCIA FICCIÓN</h2>
+                <div id="lista-historias-descubrir-scifi" class="historias-aero-grid">
+                    </div>
+            </div>
+
+            <aside class="sidebar-aero">
+                <div class="sidebar-block glassy-box p-6">
+                    <h3 class="sidebar-aero-title">HISTORIA DESTACADA</h3>
+                    <div id="historia-destacada-contenedor">
+                        </div>
                 </div>
+
+                <div class="sidebar-block glassy-box p-6">
+                    <h3 class="sidebar-aero-title">LO QUE OPINAN LOS LECTORES</h3>
+                    <div id="opiniones-contenedor">
+                        </div>
+                </div>
+            </aside>
         </section>
 
-        <section id="seccion-crear" class="hidden">
-            <h2 class="section-title">Detalles de tu Historia</h2>
-            <form id="formulario-historia" class="formulario-elaborado">
-                
-                <div class="input-group">
-                    <label>Título de la obra</label>
-                    <input type="text" id="titulo-historia" placeholder="Ej: Atrapada en la mafia" required>
-                </div>
-
-                <div class="input-group">
-                    <label>URL de la Portada (Link de una imagen)</label>
-                    <input type="url" id="portada-historia" placeholder="https://ejemplo.com/imagen.jpg">
-                </div>
-
-                <div class="input-group">
-                    <label>URL de YouTube (Música de fondo para el capítulo)</label>
-                    <input type="url" id="musica-historia" placeholder="https://www.youtube.com/watch?v=...">
-                </div>
-
-                <div class="input-group">
-                    <label>Contenido del capítulo</label>
-                    <textarea id="contenido-historia" placeholder="Escribe tu historia aquí..." required></textarea>
-                </div>
-
-                <button type="submit" class="btn-guardar">Publicar Capítulo</button>
+        <section id="seccion-escribir" class="hidden-aero">
+            <h2 class="aero-title-glow">Escribe tu Obra Maestra</h2>
+            <form id="formulario-historia" class="formulario-aero glassy-box">
+                <input type="text" id="titulo-historia" placeholder="Título de la obra (ej: Atrapada en la mafia)" required>
+                <textarea id="contenido-historia" placeholder="Empieza a escribir aquí..." required></textarea>
+                <button type="submit" class="btn-aero-submit">Publicar Capítulo</button>
             </form>
         </section>
-
-        <section id="seccion-leer" class="hidden">
-            <button id="btn-volver" class="btn-volver">← Volver al inicio</button>
-            <div id="lector-contenedor" class="lector-estilo-wattpad">
-                </div>
-        </section>
     </main>
+
+    <div class="bubbles-overlay"></div>
 
     <script src="app.js"></script>
 </body>
