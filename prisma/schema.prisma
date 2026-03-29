@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Story {
+  id          String    @id @default(uuid())
+  title       String
+  synopsis    String
+  authorName  String
+  coverImage  String?
+  createdAt   DateTime  @default(now())
+  chapters    Chapter[]
+}
+
+model Chapter {
+  id        String   @id @default(uuid())
+  title     String
+  content   String   @db.Text
+  storyId   String
+  story     Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
