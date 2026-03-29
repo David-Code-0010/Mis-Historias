@@ -1,114 +1,126 @@
-const btnVer = document.getElementById('btn-ver-historias');
-const btnCrear = document.getElementById('btn-crear-historia');
-const seccionVer = document.getElementById('seccion-ver');
-const seccionCrear = document.getElementById('seccion-crear');
-const seccionLeer = document.getElementById('seccion-leer');
-const listaHistorias = document.getElementById('lista-historias');
-const formulario = document.getElementById('formulario-historia');
-const btnVolver = document.getElementById('btn-volver');
-const lectorContenedor = document.getElementById('lector-contenedor');
+// app.js
 
-// Función para extraer el ID de un video de YouTube
-function obtenerIdYouTube(url) {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-    const match = url.match(regExp);
-    return (match && match[2].length === 11) ? match[2] : null;
+// VARIABLES PARA REFERENCIAR ELEMENTOS
+const btnDescubre = document.getElementById('btn-descubre');
+const btnCrea = document.getElementById('btn-crea');
+const seccionDescubrir = document.getElementById('seccion-descubrir');
+const seccionEscribir = document.getElementById('seccion-escribir');
+const listaRomance = document.getElementById('lista-historias-descubrir');
+const listaScifi = document.getElementById('lista-historias-descubrir-scifi');
+const destacadaContenedor = document.getElementById('historia-destacada-contenedor');
+const opinionesContenedor = document.getElementById('opiniones-contenedor');
+
+const langSelector = document.getElementById('lang-selector-aero');
+const langDropdown = document.getElementById('lang-dropdown');
+const currentLangSpan = document.getElementById('current-lang');
+
+// 1. DATOS PLACEHOLDER SKEUOMÓRFICOS (Estilo Wattpad 2012-2013)
+// En la vida real, usaríamos links reales a imágenes
+const romanceStories = [
+  { id: 1, title: 'Ángel y Demonio', author: 'Anna Todd', reads: '14,940', cover: 'https://via.placeholder.com/200x300?text=Ángel+Y+Demonio' },
+  { id: 2, title: 'ROMPIENDO REGLAS', author: 'Ariana Godoy', reads: '4,216', cover: 'https://via.placeholder.com/200x300?text=Rompiendo+Reglas' },
+];
+
+const scifiStories = [
+  { id: 3, title: 'Un mundo feliz - Huxley', author: 'Ariana Godoy', reads: '3,805', cover: 'https://via.placeholder.com/200x300?text=Un+Mundo+Feliz' },
+  { id: 4, title: 'Los Miserables, Victor Hugo', author: 'Anna Todd', reads: '3,459', cover: 'https://via.placeholder.com/200x300?text=Los+Miserables' },
+];
+
+const featuredStory = {
+  title: 'An Evil Shadow - A Val Bosanquet Mystery',
+  author: 'ajdavidson',
+  reads: '210,500',
+  cover: 'https://via.placeholder.com/100x150?text=Evil+Shadow',
+  comment: 'Fans of Harlan Coben and James Patterson will enjoy this book...'
+};
+
+const opinions = [
+  { author: 'TheGirlLost', comment: 'Aff re super Ya te dije k amo tu escrito ??!!! Xd hihi Pues te lo repito Amo no re Amo tu... ' },
+  { author: 'LectoraNostalgica', comment: 'Me encanta este estilo skeuo me hace recordar mis inicios en Wattpad... ' }
+];
+
+// 2. GESTIÓN DE LA NAVEGACIÓN
+function cambiarSeccion(mostrar, ocultar, btnActivar, btnDesactivar) {
+    ocultar.classList.add('hidden-aero');
+    mostrar.classList.remove('hidden-aero');
+    btnDesactivar.classList.remove('active');
+    btnActivar.classList.add('active');
 }
 
-function cambiarSeccion(mostrar) {
-    seccionVer.classList.add('hidden');
-    seccionCrear.classList.add('hidden');
-    seccionLeer.classList.add('hidden');
-    mostrar.classList.remove('hidden');
-}
+btnDescubre.addEventListener('click', () => cambiarSeccion(seccionDescubrir, seccionEscribir, btnDescubre, btnCrea));
+btnCrea.addEventListener('click', () => cambiarSeccion(seccionEscribir, seccionDescubrir, btnCrea, btnDescubre));
 
-btnVer.addEventListener('click', () => { cambiarSeccion(seccionVer); btnVer.classList.add('active'); btnCrear.classList.remove('active'); cargarHistorias(); });
-btnCrear.addEventListener('click', () => { cambiarSeccion(seccionCrear); btnCrear.classList.add('active'); btnVer.classList.remove('active'); });
-btnVolver.addEventListener('click', () => { cambiarSeccion(seccionVer); });
-
-function obtenerHistorias() {
-    return JSON.parse(localStorage.getItem('mis-historias-pro')) || [];
-}
-
-function cargarHistorias() {
-    const historias = obtenerHistorias();
-    listaHistorias.innerHTML = '';
-
-    if (historias.length === 0) {
-        listaHistorias.innerHTML = '<p>No hay historias. ¡Anímate a escribir la primera!</p>';
-        return;
-    }
-
-    historias.forEach((historia, index) => {
+// 3. CARGA DINÁMICA DE HISTORIAS
+function cargarStoriesGrid(lista, historias) {
+    lista.innerHTML = '';
+    historias.forEach(story => {
         const card = document.createElement('div');
-        card.className = 'historia-card';
-        // Si no puso portada, le ponemos un fondo gris por defecto
-        const imagenUrl = historia.portada ? historia.portada : 'https://via.placeholder.com/300x450?text=Sin+Portada';
-        
+        card.className = 'historia-aero-card';
         card.innerHTML = `
-            <img src="${imagenUrl}" alt="Portada" class="portada-miniatura">
-            <div class="card-info">
-                <h3>${historia.titulo}</h3>
-                <p>${historia.contenido}</p>
-            </div>
+            <img src="${story.cover}" alt="Portada" class="portada-aero glassy-box">
+            <h3 class="card-title">${story.title}</h3>
+            <p class="card-info">${story.author}</p>
+            <p class="card-info">${story.reads} leídos</p>
         `;
-        
-        // Al hacer clic, abrimos el modo lectura
-        card.addEventListener('click', () => abrirModoLectura(index));
-        listaHistorias.appendChild(card);
+        lista.appendChild(card);
     });
 }
 
-function abrirModoLectura(index) {
-    const historia = obtenerHistorias()[index];
-    cambiarSeccion(seccionLeer);
-
-    let htmlLectura = '';
-    
-    // Inyectamos la portada si existe
-    if (historia.portada) {
-        htmlLectura += `<img src="${historia.portada}" class="lector-portada">`;
-    }
-    
-    htmlLectura += `<h1 class="lector-titulo">${historia.titulo}</h1>`;
-
-    // Inyectamos el reproductor de YouTube si puso un link válido
-    if (historia.musica) {
-        const idVideo = obtenerIdYouTube(historia.musica);
-        if (idVideo) {
-            htmlLectura += `
-                <div class="lector-musica">
-                    <p style="font-size: 12px; color: #888; margin-bottom: 5px;">Dale play para ambientar tu lectura 🎵</p>
-                    <iframe width="100%" height="150" src="https://www.youtube.com/embed/${idVideo}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                </div>
-            `;
-        }
-    }
-
-    htmlLectura += `<div class="lector-contenido">${historia.contenido}</div>`;
-    lectorContenedor.innerHTML = htmlLectura;
+function cargarDestacada() {
+    destacadaContenedor.innerHTML = `
+        <div class="destacada-card">
+            <img src="${featuredStory.cover}" alt="destacada" class="portada-destacada-aero">
+            <div class="destacada-info">
+                <h4>${featuredStory.title}</h4>
+                <p>${featuredStory.author}</p>
+                <p>${featuredStory.comment}</p>
+                <span class="mas-destacada">más ></span>
+            </div>
+        </div>
+    `;
 }
 
-formulario.addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const nuevaHistoria = {
-        titulo: document.getElementById('titulo-historia').value,
-        portada: document.getElementById('portada-historia').value,
-        musica: document.getElementById('musica-historia').value,
-        contenido: document.getElementById('contenido-historia').value
-    };
+function cargarOpiniones() {
+    opinionesContenedor.innerHTML = '';
+    opiniones.forEach(opinion => {
+        const opinionElement = document.createElement('div');
+        opinionElement.className = 'opinion-aero';
+        opinionElement.innerHTML = `
+            <img src="https://via.placeholder.com/300x300?text=Avatar" alt="avatar" class="avatar-aero">
+            <p class="opinion-aero-text">
+                <span class="opinion-aero-author">${opinion.author}</span>: ${opinion.comment}
+            </f>
+        `;
+        opinionesContenedor.appendChild(opinionElement);
+    });
+}
 
-    const historias = obtenerHistorias();
-    historias.unshift(nuevaHistoria); // unshift la pone al principio de la lista
-    localStorage.setItem('mis-historias-pro', JSON.stringify(historias));
-
-    formulario.reset();
-    cambiarSeccion(seccionVer);
-    btnVer.classList.add('active');
-    btnCrear.classList.remove('active');
-    cargarHistorias();
+// 4. FUNCIONALIDAD SELECTOR DE IDIOMA SKEUO
+// Hacemos que el dropdown aparezca/desaparezca skeuomórficamente
+langSelector.addEventListener('click', function(event) {
+    event.stopPropagation(); // Evita que se cierre al hacer clic dentro
+    langDropdown.classList.toggle('hidden-aero');
 });
 
-// Iniciar app
-cargarHistorias();
+// Cerramos el menú si se hace clic fuera
+document.addEventListener('click', function() {
+    langDropdown.classList.add('hidden-aero');
+});
+
+// Lógica de selección de idioma (No cambia el texto real, solo el display)
+langDropdown.addEventListener('click', function(event) {
+    const li = event.target.closest('li');
+    if (li) {
+        const selectedLang = li.textContent;
+        const langCode = li.dataset.lang;
+        
+        currentLangSpan.textContent = selectedLang;
+        // Podrías usar 'langCode' para guardar la preferencia en LocalStorage más adelante
+    }
+});
+
+// INICIALIZACIÓN
+cargarStoriesGrid(listaRomance, romanceStories);
+cargarStoriesGrid(listaScifi, scifiStories);
+cargarDestacada();
+cargarOpiniones();
