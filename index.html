@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MisHistorias | Dark Aero</title>
+    <title>MisHistorias | Dark Aero Edition</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="aero-background">
@@ -20,15 +20,13 @@
                 </div>
                 <div class="nav-group-right">
                     <button id="btn-crea" class="btn-aero-text">Escribir</button>
-                    <button class="btn-aero-text">Comunidad</button>
                     <div id="lang-selector-aero" class="lang-selector-aero">
-                        <div class="lang-display glassy-box">
+                        <div class="lang-display glassy-box-header">
                             <span id="current-lang">Español</span> <span class="arrow-down">▼</span>
                         </div>
-                        <ul id="lang-dropdown" class="lang-dropdown hidden-aero glassy-box">
-                            <li data-lang="es">Español</li><li data-lang="en">English</li>
-                            <li data-lang="pt">Português</li><li data-lang="fr">Français</li>
-                            <li data-lang="it">Italiano</li><li data-lang="ja">日本語</li>
+                        <ul id="lang-dropdown" class="lang-dropdown hidden-aero">
+                            <li>Español</li><li>English</li><li>Português</li><li>Français</li>
+                            <li>Deutsch</li><li>Italiano</li><li>日本語</li><li>Русский</li>
                         </ul>
                     </div>
                 </div>
@@ -40,38 +38,40 @@
         <section id="layout-principal" class="flex-container">
             <div id="columna-contenido" class="flex-1">
                 <div id="seccion-descubrir">
-                    <h2 class="genre-title">ROMANCE</h2>
+                    <h2 class="genre-title">BIBLIOTECA</h2>
                     <div id="lista-historias-descubrir" class="historias-aero-grid"></div>
                 </div>
 
                 <div id="seccion-lectura" class="hidden-aero">
-                    <button id="btn-volver" class="btn-aero-text">← Volver al inicio</button>
-                    <div id="contenido-lectura-dinamico" class="reading-container glassy-box"></div>
+                    <button id="btn-volver" class="btn-aero-text">← Volver</button>
+                    <div id="contenido-lectura-dinamico" class="reading-glass-container"></div>
                 </div>
             </div>
 
             <aside id="sidebar-derecho" class="sidebar-aero">
-                <div class="sidebar-block glassy-box">
-                    <h3 class="sidebar-aero-title">LECTORES OPINAN ✨</h3>
+                <div class="sidebar-block-aero">
+                    <h3 class="sidebar-title">LECTORES OPINAN ✨</h3>
                     <div id="opiniones-contenedor" class="opiniones-scroll">
-                        <p class="empty-msg">Selecciona una historia para ver comentarios.</p>
+                        <p class="empty-msg">Entra en una historia para leer comentarios.</p>
                     </div>
                 </div>
             </aside>
         </section>
 
         <section id="seccion-escribir" class="hidden-aero">
-            <div class="write-container glassy-box">
-                <h2 class="aero-title-glow">Publicar Nueva Historia</h2>
+            <div class="write-glass-box">
+                <h2 class="aero-title-glow">Nueva Historia</h2>
                 <form id="formulario-historia" class="formulario-aero">
-                    <input type="text" id="titulo-historia" placeholder="Título (ej: Atrapada en la mafia)" required>
+                    <input type="text" id="titulo-historia" placeholder="Título de la obra" required>
                     
-                    <label class="label-aero">Sube hasta 5 fotos (Portadas o Escenas):</label>
-                    <input type="file" id="fotos-historia" accept="image/*" multiple>
-                    <div id="preview-fotos" class="preview-grid"></div>
+                    <div class="upload-section">
+                        <label>Sube tus 5 imágenes (Portada y Escenas):</label>
+                        <input type="file" id="fotos-historia" accept="image/*" multiple>
+                        <div id="preview-fotos" class="preview-grid"></div>
+                    </div>
 
-                    <textarea id="contenido-historia" placeholder="Escribe tu primer párrafo..." required></textarea>
-                    <button type="submit" class="btn-aero-submit">Post Capítulo</button>
+                    <textarea id="contenido-historia" placeholder="Escribe tu historia aquí..." required></textarea>
+                    <button type="submit" class="btn-aero-orange-submit">PUBLICAR HISTORIA</button>
                 </form>
             </div>
         </section>
