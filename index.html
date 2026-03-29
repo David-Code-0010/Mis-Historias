@@ -3,78 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MisHistorias | Dark Aero Edition</title>
+    <title>MisHistorias | Dark Aero 2026</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="aero-background">
+<body class="aero-body">
+    <div class="aero-bubbles"></div>
 
-    <header class="dark-aero-header">
-        <div class="container header-content">
-            <h1 class="logo-aero">mis<span class="orange-glow">historias</span></h1>
-            <nav class="aero-nav">
-                <div class="nav-group-left">
-                    <button id="btn-descubre" class="btn-aero-text active">Descubre</button>
-                    <div class="search-container-aero">
-                        <input type="search" id="search-input" placeholder="Buscar historias o autores...">
-                    </div>
+    <header class="aero-header">
+        <div class="container header-flex">
+            <h1 class="aero-logo">mis<span>historias</span></h1>
+            <nav class="nav-links">
+                <button id="btn-descubre" class="nav-btn active">Descubre</button>
+                <div class="aero-search">
+                    <input type="text" id="search-input" placeholder="Buscar historias...">
                 </div>
-                <div class="nav-group-right">
-                    <button id="btn-crea" class="btn-aero-text">Escribir</button>
-                    <div id="lang-selector-aero" class="lang-selector-aero">
-                        <div class="lang-display glassy-box-header">
-                            <span id="current-lang">Español</span> <span class="arrow-down">▼</span>
-                        </div>
-                        <ul id="lang-dropdown" class="lang-dropdown hidden-aero">
-                            <li>Español</li><li>English</li><li>Português</li><li>Français</li>
-                            <li>Deutsch</li><li>Italiano</li><li>日本語</li><li>Русский</li>
-                        </ul>
-                    </div>
+                <button id="btn-crea" class="nav-btn">Escribir</button>
+                <div class="lang-wrapper">
+                    <button id="lang-toggle" class="glass-select">Español ▼</button>
+                    <ul id="lang-list" class="lang-dropdown hidden">
+                        <li>Español</li><li>English</li><li>Português</li><li>Français</li>
+                        <li>Deutsch</li><li>Italiano</li><li>日本語</li><li>Русский</li><li>中文</li>
+                    </ul>
                 </div>
             </nav>
         </div>
     </header>
 
-    <main class="container main-content">
-        <section id="layout-principal" class="flex-container">
-            <div id="columna-contenido" class="flex-1">
-                <div id="seccion-descubrir">
-                    <h2 class="genre-title">BIBLIOTECA</h2>
-                    <div id="lista-historias-descubrir" class="historias-aero-grid"></div>
-                </div>
-
-                <div id="seccion-lectura" class="hidden-aero">
-                    <button id="btn-volver" class="btn-aero-text">← Volver</button>
-                    <div id="contenido-lectura-dinamico" class="reading-glass-container"></div>
-                </div>
+    <main class="container main-layout">
+        <section class="content-area">
+            <div id="seccion-descubrir">
+                <h2 class="aero-subtitle">BIBLIOTECA VIRTUAL</h2>
+                <div id="grid-historias" class="aero-grid"></div>
             </div>
 
-            <aside id="sidebar-derecho" class="sidebar-aero">
-                <div class="sidebar-block-aero">
-                    <h3 class="sidebar-title">LECTORES OPINAN ✨</h3>
-                    <div id="opiniones-contenedor" class="opiniones-scroll">
-                        <p class="empty-msg">Entra en una historia para leer comentarios.</p>
-                    </div>
+            <div id="seccion-lectura" class="hidden">
+                <button id="btn-back" class="nav-btn">← Volver</button>
+                <div id="texto-historia" class="glass-panel reading-mode"></div>
+            </div>
+
+            <div id="seccion-escribir" class="hidden">
+                <div class="glass-panel">
+                    <h2 class="aero-title">Publicar Capítulo</h2>
+                    <form id="form-publicar" class="aero-form">
+                        <input type="text" id="post-titulo" placeholder="Título de la historia" required>
+                        <div class="upload-zone">
+                            <label>Sube hasta 5 fotos (Portadas/Escenas):</label>
+                            <input type="file" id="post-fotos" accept="image/*" multiple>
+                            <div id="previsualizacion" class="photo-preview"></div>
+                        </div>
+                        <textarea id="post-contenido" placeholder="Escribe aquí tu historia..." required></textarea>
+                        <button type="submit" class="aero-button-orange">PUBLICAR AHORA</button>
+                    </form>
                 </div>
-            </aside>
-        </section>
-
-        <section id="seccion-escribir" class="hidden-aero">
-            <div class="write-glass-box">
-                <h2 class="aero-title-glow">Nueva Historia</h2>
-                <form id="formulario-historia" class="formulario-aero">
-                    <input type="text" id="titulo-historia" placeholder="Título de la obra" required>
-                    
-                    <div class="upload-section">
-                        <label>Sube tus 5 imágenes (Portada y Escenas):</label>
-                        <input type="file" id="fotos-historia" accept="image/*" multiple>
-                        <div id="preview-fotos" class="preview-grid"></div>
-                    </div>
-
-                    <textarea id="contenido-historia" placeholder="Escribe tu historia aquí..." required></textarea>
-                    <button type="submit" class="btn-aero-orange-submit">PUBLICAR HISTORIA</button>
-                </form>
             </div>
         </section>
+
+        <aside class="sidebar-right">
+            <div class="glass-panel sidebar-fixed">
+                <h3 class="sidebar-label">LECTORES OPINAN ✨</h3>
+                <div id="comentarios-flujo" class="comments-container">
+                    <p class="empty-txt">Selecciona una historia para ver la actividad...</p>
+                </div>
+            </div>
+        </aside>
     </main>
 
     <script src="app.js"></script>
