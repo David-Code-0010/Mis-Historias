@@ -1,52 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis-Historias | Dark Aero</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
 <body class="aero-background">
-    <div class="bubbles-overlay"></div>
-
     <header class="dark-aero-header">
         <div class="container header-content">
             <h1 class="logo-aero">mis<span class="orange-glow">-historias</span></h1>
-            
             <nav class="aero-nav">
                 <div class="nav-group-left">
                     <button id="btn-descubre" class="btn-aero-text active">Descubre</button>
-                    <div class="search-container-aero">
-                        <input type="search" id="search-input" placeholder="Buscar historias... (Enter)">
-                        <button class="btn-search-aero"></button>
-                    </div>
                 </div>
-
                 <div class="nav-group-right">
                     <button id="btn-crea" class="btn-aero-text">Escribir</button>
-                    <button id="btn-comunidad" class="btn-aero-text">Comunidad</button>
-                    <button id="btn-bot" class="btn-aero-text" style="color: var(--aero-green-base); border: 1px solid rgba(51,255,51,0.2);">Bot 🤖</button>
+                    <button id="btn-bot" class="btn-aero-text" style="color:var(--aero-green-base)">Bot 🤖</button>
                 </div>
             </nav>
         </div>
     </header>
 
     <main class="container main-content">
-        <section id="seccion-bot" class="hidden-aero flex-container">
-            <div class="flex-1 glassy-box p-30">
-                <h2 class="aero-title-glow" style="color: var(--aero-green-base); text-shadow: 0 0 10px rgba(51,255,51,0.8);">
-                    Cerebro Colectivo GPT
-                </h2>
-                <p style="font-size: 12px; color: var(--text-grey); margin-bottom: 20px;">
-                    Esta IA aprende de cada historia publicada. Pregúntale sobre la biblioteca.
-                </p>
-                
-                <div id="chat-window" class="opiniones-scroll" style="height: 400px; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 8px; border: 1px solid #333; margin-bottom: 20px;">
-                    <div class="opinion-aero">
-                        <span class="opinion-aero-author">Bot:</span>
-                        <p class="opinion-aero-text">Hola David. He procesado las historias actuales. ¿De qué quieres que hablemos hoy?</p>
-                    </div>
-                </div>
+        <section id="seccion-descubrir">
+            <h2 class="genre-title">BIBLIOTECA VIRTUAL</h2>
+            <div id="lista-historias-descubrir" class="historias-aero-grid"></div>
+        </section>
 
-                <div class="formulario-aero" style="display: flex; gap: 10px;">
-                    <input type="text" id="input-bot" placeholder="Habla con la IA..." style="margin-bottom: 0;">
-                    <button id="btn-enviar-bot" class="btn-aero-submit" style="width: auto; background: var(--aero-aqua-glow);">ENVIAR</button>
+        <section id="seccion-escribir" class="hidden-aero">
+            <div class="glassy-box p-30">
+                <h2 class="aero-title-glow">Nueva Historia</h2>
+                <form id="formulario-historia" class="formulario-aero">
+                    <input type="text" id="titulo-historia" placeholder="Título..." required>
+                    <input type="file" id="fotos-historia" accept="image/*">
+                    <textarea id="contenido-historia" placeholder="Escribe tu historia aquí..." required></textarea>
+                    <button type="submit" class="btn-aero-submit">PUBLICAR</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="seccion-bot" class="hidden-aero">
+            <div class="glassy-box p-30">
+                <h2 class="aero-title-glow" style="color:var(--aero-green-base)">Cerebro Colectivo</h2>
+                <div id="chat-window" class="opiniones-scroll" style="height:350px; background:rgba(0,0,0,0.3); padding:15px; border-radius:8px; margin-bottom:15px;"></div>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="input-bot" class="formulario-aero" placeholder="Pregunta sobre las historias..." style="margin:0; flex:1;">
+                    <button id="btn-enviar-bot" class="btn-aero-submit" style="width:auto;">Enviar</button>
                 </div>
             </div>
         </section>
     </main>
-
     <script src="./app.js"></script>
 </body>
+</html>
