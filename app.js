@@ -1,4 +1,6 @@
-// Base de datos de prueba de Mis-Historias
+// ==========================================
+// BASE DE DATOS Y ESTADO GLOBAL
+// ==========================================
 let historiasDb = [
     { 
         id: 1, 
@@ -48,11 +50,110 @@ document.addEventListener('DOMContentLoaded', () => {
     const seccionBot = document.getElementById('seccion-bot');
     const searchInput = document.getElementById('search-input');
 
-    // Función para renderizar la biblioteca (Diseño Mata Nero)
+    // ==========================================
+    // FUNCIONES GLOBALES (Para que funcionen los onclick del HTML)
+    // ==========================================
+    window.cambiarFoto = function(direccion) {
+        const historia = historiasDb.find(h => h.id === historiaActivaId);
+        if (!historia || !historia.portadas) return;
+
+        carruselIndex += direccion;
+        if (carruselIndex >= historia.portadas.length) carruselIndex = 0;
+        if (carruselIndex < 0) carruselIndex = historia.portadas.length - 1;
+
+        const imgElement = document.getElementById('carousel-img-aero');
+        if (imgElement) {
+            imgElement.src = historia.portadas[carruselIndex];
+        }
+    };
+
+    window.abrirComentarios = function(id, index) {
+        historiaActivaId = id;
+        parrafoActivoIndex = index;
+
+        const historia = historiasDb.find(h => h.id === id);
+        tituloOpiniones.innerText = `OPINIONES - Párrafo ${index + 1}`;
+        cajaComentario.style.display = 'block'; // Mostramos la caja para que puedan escribir
+        
+        panelOpiniones.innerHTML = '';
+        
+        const comentariosDelParrafo = historia.comentarios[index] || [];
+
+        if (comentariosDelParrafo.length === 0) {
+            panelOpiniones.innerHTML = '<p class="empty-msg">No hay comentarios aún. ¡Sé el primero!</p>';
+            return;
+        }
+
+        // Imprimir los comentarios existentes
+        comentariosDelParrafo.forEach(comentario => {
+            const div = document.createElement('div');
+            div.style.background = 'rgba(255,255,255,0.05)';
+            div.style.padding = '10px 15px';
+            div.style.borderRadius = '8px';
+            div.style.marginBottom = '10px';
+            div.style.borderLeft = '3px solid var(--aqua)';
+            div.innerHTML = `<p style="color: var(--text); margin: 0; font-size: 0.95rem;">${comentario}</p>`;
+            panelOpiniones.appendChild(div);
+        });
+    };
+
+    // ==========================================
+    // SISTEMA DE NAVEGACIÓN MAESTRO
+    // ==========================================
+    function cambiarPantalla(pantalla) {
+        // Apagamos todas
+        seccionDescubrir.style.display = 'none';
+        seccionLectura.style.display = 'none';
+        seccionEscribir.style.display = 'none';
+        seccionBot.style.display = 'none';
+
+        // Encendemos la elegida
+        if (pantalla === 'descubrir') {
+            seccionDescubrir.style.display = 'block';
+            renderInicio(); 
+        } 
+        else if (pantalla === 'lectura') {
+            seccionLectura.style.display = 'flex'; 
+        } 
+        else if (pantalla === 'escribir') {
+            seccionEscribir.style.display = 'block';
+        } 
+        else if (pantalla === 'bot') {
+            seccionBot.style.display = 'block';
+        }
+    }
+
+    // --- EVENTOS DE NAVEGACIÓN ---
+    document.getElementById('btn-descubre').addEventListener('click', (e) => {
+        document.querySelectorAll('.aero-nav button').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        searchInput.value = ''; 
+        cambiarPantalla('descubrir');
+    });
+
+    document.getElementById('btn-volver').addEventListener('click', () => {
+        document.getElementById('btn-descubre').click();
+    });
+
+    document.getElementById('btn-crea').addEventListener('click', (e) => {
+        document.querySelectorAll('.aero-nav button').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        cambiarPantalla('escribir');
+    });
+
+    document.getElementById('btn-bot').addEventListener('click', (e) => {
+        document.querySelectorAll('.aero-nav button').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        cambiarPantalla('bot');
+    });
+
+    // ==========================================
+    // RENDERIZAR BIBLIOTECA
+    // ==========================================
     function renderInicio(datos = historiasDb) {
         gridDescubrir.innerHTML = '';
         if (datos.length === 0) {
-            gridDescubrir.innerHTML = '<p class="empty-msg">No se encontraron historias con ese nombre.</p>';
+            gridDescubrir.innerHTML = '<p class="empty-msg">No se encontraron historias.</p>';
             return;
         }
 
@@ -85,73 +186,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================
-    // SISTEMA DE NAVEGACIÓN MAESTRO (A PRUEBA DE FALLOS)
+    // ABRIR LECTURA DE HISTORIA
     // ==========================================
-    function cambiarPantalla(pantalla) {
-        // 1. Apagamos TODAS las pantallas a la fuerza
-        seccionDescubrir.style.display = 'none';
-        seccionLectura.style.display = 'none';
-        seccionEscribir.style.display = 'none';
-        seccionBot.style.display = 'none';
-
-        // 2. Encendemos SOLO la que pedimos
-        if (pantalla === 'descubrir') {
-            seccionDescubrir.style.display = 'block';
-            renderInicio(); // Refrescamos la biblioteca
-        } 
-        else if (pantalla === 'lectura') {
-            seccionLectura.style.display = 'flex'; // Usamos flex para la barra lateral
-        } 
-        else if (pantalla === 'escribir') {
-            seccionEscribir.style.display = 'block';
-        } 
-        else if (pantalla === 'bot') {
-            seccionBot.style.display = 'block';
-        }
-    }
-
-    // --- EVENTOS DE LOS BOTONES ---
-    document.getElementById('btn-descubre').addEventListener('click', (e) => {
-        document.querySelectorAll('.aero-nav button').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        searchInput.value = ''; 
-        cambiarPantalla('descubrir');
-    });
-
-    document.getElementById('btn-volver').addEventListener('click', () => {
-        document.getElementById('btn-descubre').click();
-    });
-
-    document.getElementById('btn-crea').addEventListener('click', (e) => {
-        document.querySelectorAll('.aero-nav button').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        cambiarPantalla('escribir');
-    });
-
-    document.getElementById('btn-bot').addEventListener('click', (e) => {
-        document.querySelectorAll('.aero-nav button').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        cambiarPantalla('bot');
-    });
-
-    // --- ABRIR UNA HISTORIA ---
     function abrirLectura(id) {
         const historia = historiasDb.find(h => h.id === id);
         historiaActivaId = id;
         parrafoActivoIndex = null; 
         carruselIndex = 0; 
 
-        // Usamos nuestro nuevo sistema para mostrar la lectura
         cambiarPantalla('lectura');
-
         panelLectura.innerHTML = '';
 
+        // Carrusel de portadas
         if (historia.portadas && historia.portadas.length > 0) {
             const carouselHtml = `
                 <div style="position: relative; width: 100%; height: 250px; margin-bottom: 20px; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
-                    <button class="btn-carousel-aero prev-portada" onclick="cambiarFoto(-1)" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); z-index: 10; background: rgba(0,0,0,0.6); border: 1px solid var(--aqua); color: white; border-radius: 50%; width: 40px; height: 40px; cursor: pointer;">◀</button>
+                    <button class="btn-carousel-aero prev-portada" onclick="window.cambiarFoto(-1)" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); z-index: 10; background: rgba(0,0,0,0.6); border: 1px solid var(--aqua); color: white; border-radius: 50%; width: 40px; height: 40px; cursor: pointer;">◀</button>
                     <img src="${historia.portadas[0]}" id="carousel-img-aero" alt="Portada" style="width: 100%; height: 100%; object-fit: cover; transition: opacity 0.3s ease;">
-                    <button class="btn-carousel-aero next-portada" onclick="cambiarFoto(1)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); z-index: 10; background: rgba(0,0,0,0.6); border: 1px solid var(--aqua); color: white; border-radius: 50%; width: 40px; height: 40px; cursor: pointer;">▶</button>
+                    <button class="btn-carousel-aero next-portada" onclick="window.cambiarFoto(1)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); z-index: 10; background: rgba(0,0,0,0.6); border: 1px solid var(--aqua); color: white; border-radius: 50%; width: 40px; height: 40px; cursor: pointer;">▶</button>
                 </div>
             `;
             panelLectura.innerHTML += carouselHtml;
@@ -165,6 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         panelLectura.innerHTML += `<h1 class="aero-title-glow" style="text-align:center; font-size: 2rem; margin-bottom: 30px;">${historia.titulo}</h1>`;
 
+        // Párrafos y botones de comentarios
         const parrafos = historia.texto.split(/\n+/);
         parrafos.forEach((p, index) => {
             if (p.trim() === '') return; 
@@ -181,19 +234,22 @@ document.addEventListener('DOMContentLoaded', () => {
             
             div.innerHTML = `
                 <p style="flex: 1; color: var(--text); line-height: 1.6; font-size: 1.05rem; padding-right: 15px;">${p}</p>
-                <button class="btn-aero-text" onclick="abrirComentarios(${id}, ${index})" style="padding: 5px 10px;">
+                <button class="btn-aero-text" onclick="window.abrirComentarios(${id}, ${index})" style="padding: 5px 10px;">
                     💬 <span id="contador-${id}-${index}" style="color: var(--aqua);">${numComentarios}</span>
                 </button>
             `;
             panelLectura.appendChild(div);
         });
 
+        // Resetear la barra lateral
         tituloOpiniones.innerText = 'LECTORES OPINAN ✨';
         panelOpiniones.innerHTML = '<p class="empty-msg">Haz clic en el icono 💬 de un párrafo para ver u opinar.</p>';
-        cajaComentario.style.display = 'none'; // Usamos display nativo
+        cajaComentario.style.display = 'none'; 
     }
 
-    // Lógica de subir fotos (Previsualización)
+    // ==========================================
+    // CREAR NUEVA HISTORIA
+    // ==========================================
     const inputFotos = document.getElementById('fotos-historia');
     const previewGrid = document.getElementById('preview-fotos');
 
@@ -218,7 +274,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Crear y publicar nueva historia
     document.getElementById('formulario-historia').addEventListener('submit', (e) => {
         e.preventDefault();
         const titulo = document.getElementById('titulo-historia').value;
@@ -231,7 +286,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (imagenesPreview.length > 0) {
             portadasFinales = Array.from(imagenesPreview).map(img => img.src);
         } else {
-            // Portada genérica si no sube ninguna
             portadasFinales = ['https://via.placeholder.com/600x300/111/f90?text=Mis+Historias'];
         }
 
@@ -252,6 +306,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('btn-descubre').click();
     });
 
-    // Renderizar la biblioteca al cargar la página usando el sistema maestro
+    // ==========================================
+    // INICIALIZAR LA APLICACIÓN
+    // ==========================================
     cambiarPantalla('descubrir');
 });
