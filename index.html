@@ -13,10 +13,9 @@
         <div class="container header-content">
             <h1 class="logo-aero">mis<span class="orange-glow">-historias</span></h1>
             <nav class="aero-nav">
-                <div class="nav-group-left">
-                    <button id="btn-descubre" class="btn-aero-text active">Descubre</button>
-                </div>
-                <div class="nav-group-right">
+                <button id="btn-inicio" class="btn-aero-text hidden-aero">Inicio / Biblioteca</button>
+                
+                <div class="nav-group-right" style="display:flex; gap:10px;">
                     <button id="btn-crea" class="btn-aero-text">Escribir</button>
                     <button id="btn-bot" class="btn-aero-text" style="color: var(--green-accent)">Bot 🤖</button>
                 </div>
@@ -25,21 +24,49 @@
     </header>
 
     <main class="container main-content">
+        
         <section id="seccion-descubrir">
-            <h2 class="genre-title">BIBLIOTECA VIRTUAL</h2>
-            <div id="lista-historias-descubrir" class="historias-aero-grid"></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h2 class="genre-title">BIBLIOTECA VIRTUAL</h2>
+                <div class="formulario-aero" style="width:300px;">
+                    <input type="text" id="buscador-historias" placeholder="Buscar historias o autores..." style="margin-bottom:0; padding:10px 15px;">
+                </div>
+            </div>
+
+            <div id="lista-historias-descubrir" class="historias-aero-grid">
+                <article class="glassy-box" style="cursor:pointer;" onclick="console.log('Abrir historia de prueba')">
+                    <div class="card-image-edge"></div>
+                    <h3 class="aero-title-glow" style="font-size:1.1rem; margin-top:40px;">El Eco de Neon</h3>
+                    <p style="color:var(--text-dim); font-size:0.85rem;">Por: David_Dev</p>
+                    <p style="font-size:0.8rem; margin-top:10px; color:var(--muted);">Una breve historia sobre los restos de una civilización digital...</p>
+                </article>
+            </div>
         </section>
 
         <section id="seccion-lectura" class="hidden-aero flex-container">
-            <div class="flex-1 glassy-box p-30">
-                <button id="btn-volver" class="btn-aero-text mb-20">← Volver a Biblioteca</button>
-                <div id="lectura-contenido-dinamico"></div>
+            <div class="flex-1">
+                <div class="glassy-box p-30">
+                    <button id="btn-volver" class="btn-aero-text mb-20">← Volver</button>
+                    <div id="lectura-contenido-dinamico">
+                        </div>
+
+                    <div class="mt-10" style="border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
+                        <h4 class="aero-title-glow" style="font-size:1rem;">Enviar mensaje al autor</h4>
+                        <div class="formulario-aero" style="display:flex; gap:10px;">
+                            <input type="text" id="input-mensaje-autor" placeholder="Escribe algo para el creador..." style="margin:0;">
+                            <button id="btn-enviar-mensaje" class="btn-aero-submit" style="width:auto; padding:0 20px;">Enviar</button>
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <aside class="sidebar-aero sidebar-fixed">
                 <div class="glassy-box p-20">
-                    <h3 id="titulo-opiniones" class="aero-title-glow" style="font-size: 1.1rem;">LECTORES OPINAN ✨</h3>
+                    <h3 class="aero-title-glow" style="font-size: 1.1rem;">LECTORES OPINAN ✨</h3>
                     <div id="opiniones-contenedor" class="opiniones-scroll">
-                        <p class="empty-msg">Selecciona una historia.</p>
+                        <div class="msg-user">
+                            <p style="font-size:0.85rem;"><strong>Lector_Anónimo:</strong> ¡Me encantó el giro del final!</p>
+                        </div>
                     </div>
                 </div>
             </aside>
@@ -51,15 +78,7 @@
                 <form id="formulario-historia" class="formulario-aero">
                     <input type="text" id="titulo-historia" placeholder="TÍTULO DE TU RELATO..." required>
                     <input type="text" id="autor-historia" placeholder="TU ALIAS EN EL SISTEMA...">
-                    
-                    <div class="mb-20 upload-zone">
-                        <label style="color: var(--aqua); font-weight: 600; display: block; margin-bottom: 10px;">Sube hasta 5 fotos (Portadas o Escenas):</label>
-                        <input type="file" id="fotos-historia" accept="image/*" multiple class="responsive-file-input">
-                        <div id="preview-fotos" class="preview-grid mt-10"></div>
-                    </div>
-
-                    <textarea id="contenido-historia" placeholder="Escribe tu historia aquí... Usa 'Enter' para crear nuevos párrafos comentables." required></textarea>
-                    
+                    <textarea id="contenido-historia" placeholder="Escribe tu historia aquí..." required></textarea>
                     <button type="submit" class="btn-aero-submit">PUBLICAR EN LA RED NEON</button>
                 </form>
             </div>
@@ -68,11 +87,9 @@
         <section id="seccion-bot" class="hidden-aero">
             <div class="glassy-box p-30">
                 <h2 class="aero-title-glow" style="color: var(--aqua)">Cerebro Colectivo</h2>
-                
-                <div id="chat-window" class="opiniones-scroll" style="height:400px; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 10px; margin-bottom: 15px; border: 1px solid rgba(0,255,216,0.1);">
-                    <div class="msg-bot"><p>Conectando con la base de datos de Neon... Estoy listo para charlar, David.</p></div>
+                <div id="chat-window" class="opiniones-scroll" style="height:350px; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 10px; margin-bottom: 15px; border: 1px solid rgba(0,255,216,0.1);">
+                    <div class="msg-bot"><p>Conectando con la base de datos de Neon...</p></div>
                 </div>
-                
                 <div style="display: flex; gap: 10px;">
                     <input type="text" id="input-bot" class="formulario-aero" placeholder="Pregunta sobre las historias..." style="margin: 0; flex: 1;">
                     <button id="btn-enviar-bot" class="btn-aero-submit" style="width: auto; padding: 0 30px;">Enviar</button>
