@@ -111,7 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- EVENTOS DE LOS BOTONES ---
-
     document.getElementById('btn-descubre').addEventListener('click', (e) => {
         document.querySelectorAll('.aero-nav button').forEach(b => b.classList.remove('active'));
         e.target.classList.add('active');
@@ -147,7 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         panelLectura.innerHTML = '';
 
-        // (Aquí sigue el resto de tu código de abrirLectura sin cambios...)
         if (historia.portadas && historia.portadas.length > 0) {
             const carouselHtml = `
                 <div style="position: relative; width: 100%; height: 250px; margin-bottom: 20px; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
@@ -194,41 +192,6 @@ document.addEventListener('DOMContentLoaded', () => {
         panelOpiniones.innerHTML = '<p class="empty-msg">Haz clic en el icono 💬 de un párrafo para ver u opinar.</p>';
         cajaComentario.style.display = 'none'; // Usamos display nativo
     }
-    // Navegación: Botones del Header
-    document.getElementById('btn-descubre').addEventListener('click', (e) => {
-        document.querySelectorAll('.aero-nav button').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        
-        seccionDescubrir.classList.remove('hidden-aero');
-        seccionLectura.classList.add('hidden-aero');
-        seccionEscribir.classList.add('hidden-aero');
-        seccionBot.classList.add('hidden-aero');
-        
-        searchInput.value = ''; 
-        renderInicio(); 
-    });
-
-    document.getElementById('btn-volver').addEventListener('click', () => document.getElementById('btn-descubre').click());
-
-    document.getElementById('btn-crea').addEventListener('click', (e) => {
-        document.querySelectorAll('.aero-nav button').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-
-        seccionDescubrir.classList.add('hidden-aero');
-        seccionLectura.classList.add('hidden-aero');
-        seccionBot.classList.add('hidden-aero');
-        seccionEscribir.classList.remove('hidden-aero');
-    });
-
-    document.getElementById('btn-bot').addEventListener('click', (e) => {
-        document.querySelectorAll('.aero-nav button').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-
-        seccionDescubrir.classList.add('hidden-aero');
-        seccionLectura.classList.add('hidden-aero');
-        seccionEscribir.classList.add('hidden-aero');
-        seccionBot.classList.remove('hidden-aero');
-    });
 
     // Lógica de subir fotos (Previsualización)
     const inputFotos = document.getElementById('fotos-historia');
@@ -289,6 +252,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('btn-descubre').click();
     });
 
-    // Renderizar la biblioteca al cargar la página
-    renderInicio();
+    // Renderizar la biblioteca al cargar la página usando el sistema maestro
+    cambiarPantalla('descubrir');
 });
