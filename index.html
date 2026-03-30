@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis-Historias | Mata Nero Aero</title>
+    <title>Mis-Historias | Aero</title>
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
@@ -12,10 +12,11 @@
     <header class="dark-aero-header">
         <div class="container header-content">
             <h1 class="logo-aero">mis<span class="orange-glow">-historias</span></h1>
-            <nav class="aero-nav">
-                <button id="btn-inicio" class="btn-aero-text hidden-aero">Inicio / Biblioteca</button>
-                
-                <div class="nav-group-right" style="display:flex; gap:10px;">
+            
+            <nav class="aero-nav" style="flex-wrap: wrap; justify-content: flex-end;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <input type="search" id="search-input" placeholder="Buscar historias... (Enter)" style="background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); color: var(--text); padding: 8px 12px; border-radius: 8px; font-size: 0.9rem; outline: none; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);">
+                    <button id="btn-descubre" class="btn-aero-text active">Biblioteca</button>
                     <button id="btn-crea" class="btn-aero-text">Escribir</button>
                     <button id="btn-bot" class="btn-aero-text" style="color: var(--green-accent)">Bot 🤖</button>
                 </div>
@@ -26,47 +27,30 @@
     <main class="container main-content">
         
         <section id="seccion-descubrir">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                <h2 class="genre-title">BIBLIOTECA VIRTUAL</h2>
-                <div class="formulario-aero" style="width:300px;">
-                    <input type="text" id="buscador-historias" placeholder="Buscar historias o autores..." style="margin-bottom:0; padding:10px 15px;">
-                </div>
-            </div>
-
+            <h2 class="genre-title">BIBLIOTECA VIRTUAL</h2>
             <div id="lista-historias-descubrir" class="historias-aero-grid">
-                <article class="glassy-box" style="cursor:pointer;" onclick="console.log('Abrir historia de prueba')">
-                    <div class="card-image-edge"></div>
-                    <h3 class="aero-title-glow" style="font-size:1.1rem; margin-top:40px;">El Eco de Neon</h3>
-                    <p style="color:var(--text-dim); font-size:0.85rem;">Por: David_Dev</p>
-                    <p style="font-size:0.8rem; margin-top:10px; color:var(--muted);">Una breve historia sobre los restos de una civilización digital...</p>
-                </article>
-            </div>
+                </div>
         </section>
 
         <section id="seccion-lectura" class="hidden-aero flex-container">
             <div class="flex-1">
                 <div class="glassy-box p-30">
-                    <button id="btn-volver" class="btn-aero-text mb-20">← Volver</button>
-                    <div id="lectura-contenido-dinamico">
+                    <button id="btn-volver" class="btn-aero-text mb-20">← Volver a Biblioteca</button>
+                    <div id="contenido-lectura-dinamico">
                         </div>
-
-                    <div class="mt-10" style="border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
-                        <h4 class="aero-title-glow" style="font-size:1rem;">Enviar mensaje al autor</h4>
-                        <div class="formulario-aero" style="display:flex; gap:10px;">
-                            <input type="text" id="input-mensaje-autor" placeholder="Escribe algo para el creador..." style="margin:0;">
-                            <button id="btn-enviar-mensaje" class="btn-aero-submit" style="width:auto; padding:0 20px;">Enviar</button>
-                        </div>
-                    </div>
                 </div>
             </div>
 
             <aside class="sidebar-aero sidebar-fixed">
                 <div class="glassy-box p-20">
-                    <h3 class="aero-title-glow" style="font-size: 1.1rem;">LECTORES OPINAN ✨</h3>
-                    <div id="opiniones-contenedor" class="opiniones-scroll">
-                        <div class="msg-user">
-                            <p style="font-size:0.85rem;"><strong>Lector_Anónimo:</strong> ¡Me encantó el giro del final!</p>
-                        </div>
+                    <h3 id="titulo-opiniones" class="aero-title-glow" style="font-size: 1.1rem;">LECTORES OPINAN ✨</h3>
+                    <div id="opiniones-contenedor" class="opiniones-scroll" style="min-height: 150px;">
+                        <p class="empty-msg">Selecciona un párrafo para ver u opinar.</p>
+                    </div>
+
+                    <div id="caja-escribir-comentario" class="hidden-aero mt-10" style="border-top: 1px solid rgba(0,255,216,0.1); padding-top: 15px;">
+                        <input type="text" id="input-nuevo-comentario" placeholder="Escribe tu opinión aquí..." style="width: 100%; padding: 10px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); color: var(--text); border-radius: 8px; margin-bottom: 10px; font-size: 0.9rem; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);">
+                        <button id="btn-enviar-comentario" class="btn-aero-submit" style="padding: 10px; font-size: 0.9rem; width: 100%;">ENVIAR COMENTARIO</button>
                     </div>
                 </div>
             </aside>
@@ -77,8 +61,16 @@
                 <h2 class="aero-title-glow">Nueva Historia</h2>
                 <form id="formulario-historia" class="formulario-aero">
                     <input type="text" id="titulo-historia" placeholder="TÍTULO DE TU RELATO..." required>
-                    <input type="text" id="autor-historia" placeholder="TU ALIAS EN EL SISTEMA...">
-                    <textarea id="contenido-historia" placeholder="Escribe tu historia aquí..." required></textarea>
+                    <input type="text" id="autor-historia" placeholder="TU ALIAS EN EL SISTEMA..." required>
+                    
+                    <div class="mb-20 upload-zone" style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px; border: 1px dashed rgba(255,255,255,0.1);">
+                        <label style="color: var(--aqua); font-weight: 600; display: block; margin-bottom: 10px;">Sube hasta 5 fotos (Portadas o Escenas):</label>
+                        <input type="file" id="fotos-historia" accept="image/*" multiple style="color: var(--text-dim);">
+                        <div id="preview-fotos" class="preview-grid mt-10"></div>
+                    </div>
+
+                    <textarea id="contenido-historia" placeholder="Escribe tu historia aquí... Usa 'Enter' para crear nuevos párrafos comentables." required style="min-height: 300px;"></textarea>
+                    
                     <button type="submit" class="btn-aero-submit">PUBLICAR EN LA RED NEON</button>
                 </form>
             </div>
@@ -88,10 +80,10 @@
             <div class="glassy-box p-30">
                 <h2 class="aero-title-glow" style="color: var(--aqua)">Cerebro Colectivo</h2>
                 <div id="chat-window" class="opiniones-scroll" style="height:350px; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 10px; margin-bottom: 15px; border: 1px solid rgba(0,255,216,0.1);">
-                    <div class="msg-bot"><p>Conectando con la base de datos de Neon...</p></div>
+                    <div class="msg-bot"><p>Conectando con la base de datos... Estoy listo para charlar sobre las historias, David.</p></div>
                 </div>
                 <div style="display: flex; gap: 10px;">
-                    <input type="text" id="input-bot" class="formulario-aero" placeholder="Pregunta sobre las historias..." style="margin: 0; flex: 1;">
+                    <input type="text" id="input-bot" placeholder="Pregunta sobre las historias..." style="flex: 1; padding: 12px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); color: var(--text); border-radius: 8px;">
                     <button id="btn-enviar-bot" class="btn-aero-submit" style="width: auto; padding: 0 30px;">Enviar</button>
                 </div>
             </div>
