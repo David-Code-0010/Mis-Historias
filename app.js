@@ -279,3 +279,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Ejecutamos la carga desde la nube al abrir la página
     cargarHistorias();
 });
+
+const btnBot = document.getElementById('btn-bot');
+const seccionBot = document.getElementById('seccion-bot');
+
+btnBot.addEventListener('click', () => {
+    // Ocultar todas las secciones
+    document.getElementById('layout-principal').classList.add('hidden-aero');
+    document.getElementById('seccion-escribir').classList.add('hidden-aero');
+    
+    // Mostrar sección Bot
+    seccionBot.classList.remove('hidden-aero');
+    
+    // Marcar botón como activo
+    document.querySelectorAll('.btn-aero-text').forEach(b => b.classList.remove('active'));
+    btnBot.classList.add('active');
+});
+
