@@ -1,25 +1,7 @@
 // ==========================================
 // ESTADO GLOBAL
 // ==========================================
-let historiasDb = [
-    { 
-        id: 1, 
-        titulo: 'Oscuridad Neón', 
-        autor: 'Cyber_Anna',
-        portadas: ['https://via.placeholder.com/600x300/111/0cf?text=Neon+Cover+1'],
-        texto: "La luz de la ciudad se reflejaba en el asfalto mojado. Todo era azul y naranja.\n\nÉl me miró con esos ojos que parecían circuitos integrados.",
-        comentarios: { 0: ["¡Amo esa descripción!"], 1: [] }
-    },
-    { 
-        id: 2, 
-        titulo: 'Reglas del Juego', 
-        autor: 'AeroWriter',
-        portadas: ['https://via.placeholder.com/600x300/111/f90?text=Rules+Cover'],
-        texto: "Regla número 1: No confíes en nadie.\n\nRegla número 2: Nunca reveles tu identidad.",
-        comentarios: { 0: ["Totalmente cierto jaja", "Qué intenso inicio"], 1: [] }
-    }
-];
-
+let historiasDb = [];
 let historiaActivaId = null;
 let parrafoActivoIndex = null;
 
@@ -31,6 +13,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const cajaComentario = document.getElementById('caja-escribir-comentario');
     const btnEnviar = document.querySelector('#caja-escribir-comentario button');
     const inputComentario = document.getElementById('nuevo-comentario') || document.querySelector('#caja-escribir-comentario input');
+
+    // ==========================================
+    // CARGAR DATOS DESDE LA BASE DE DATOS (NEON)
+    // ==========================================
+    async function cargarHistorias() {
+        try {
+            const res = await fetch('/api/historias');
+            if (res.ok) {
+                historiasDb = await res.json();
+                render();
+            }
+        } catch (e) {
+            console.error("Error cargando la base de datos:", e);
+        }
+    }
 
     // ==========================================
     // LÓGICA DE COMENTARIOS (EL MOTOR)
@@ -50,11 +47,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const comentarios = (historia.comentarios && historia.comentarios[index]) ? historia.comentarios[index] : [];
 
         if (comentarios.length === 0) {
-            panelOpiniones.innerHTML = '<p class="empty-msg">Sin opiniones aún.</p>';
+            panelOpiniones.innerHTML = '<p class="empty-msg" style="color:#aaa; text-align:center;">Sin opiniones aún en este párrafo.</p>';
         } else {
             comentarios.forEach(texto => {
                 const div = document.createElement('div');
-                // DISEÑO RECUPERADO (Imagen 2)
+                // DISEÑO RECUPERADO (Cuadros Dark Aero)
                 div.style.background = 'rgba(255,255,255,0.05)';
                 div.style.padding = '12px';
                 div.style.borderRadius = '8px';
@@ -67,32 +64,52 @@ document.addEventListener('DOMContentLoaded', () => {
                 panelOpiniones.appendChild(div);
             });
         }
+        // Auto-scroll hacia abajo
         panelOpiniones.scrollTop = panelOpiniones.scrollHeight;
     }
 
-    // FUNCIÓN PARA ENVIAR Y GUARDAR
-    window.enviarComentario = function() {
+    // FUNCIÓN PARA ENVIAR Y GUARDAR EN NEON.TECH
+    window.enviarComentario = async function() {
         const texto = inputComentario.value.trim();
         if (!texto || historiaActivaId === null || parrafoActivoIndex === null) return;
 
-        const historia = historiasDb.find(h => h.id === historiaActivaId);
-        
-        // Inicializar si no existe el array de ese párrafo
-        if (!historia.comentarios[parrafoActivoIndex]) {
-            historia.comentarios[parrafoActivoIndex] = [];
-        }
+        const datosComentario = {
+            historia_id: historiaActivaId,
+            parrafo_idx: parrafoActivoIndex,
+            contenido: texto
+        };
 
-        // GUARDAR en el array
-        historia.comentarios[parrafoActivoIndex].push(texto);
-        
-        // Limpiar y refrescar
-        inputComentario.value = '';
-        actualizarListaComentarios(historia, parrafoActivoIndex);
-        
-        // Actualizar el contador visual en el párrafo
-        const contador = document.getElementById(`contador-${historiaActivaId}-${parrafoActivoIndex}`);
-        if (contador) {
-            contador.innerText = historia.comentarios[parrafoActivoIndex].length;
+        try {
+            // Enviar al backend de Python
+            const res = await fetch('/api/comentar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datosComentario)
+            });
+
+            if (res.ok) {
+                // Actualizar la memoria local para respuesta inmediata sin recargar la página
+                const historia = historiasDb.find(h => h.id === historiaActivaId);
+                
+                if (!historia.comentarios) historia.comentarios = {};
+                if (!historia.comentarios[parrafoActivoIndex]) historia.comentarios[parrafoActivoIndex] = [];
+                
+                historia.comentarios[parrafoActivoIndex].push(texto);
+                
+                // Limpiar el input y refrescar la lista
+                inputComentario.value = '';
+                actualizarListaComentarios(historia, parrafoActivoIndex);
+                
+                // Actualizar el contador visual en el globo de diálogo del párrafo
+                const contador = document.getElementById(`contador-${historiaActivaId}-${parrafoActivoIndex}`);
+                if (contador) {
+                    contador.innerText = historia.comentarios[parrafoActivoIndex].length;
+                }
+            } else {
+                alert("Hubo un problema al guardar el comentario.");
+            }
+        } catch (e) {
+            console.error("Error de conexión:", e);
         }
     };
 
@@ -106,23 +123,37 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     window.abrirLectura = function(id) {
         const historia = historiasDb.find(h => h.id === id);
+        if (!historia) return;
+
         document.getElementById('seccion-descubrir').style.display = 'none';
         document.getElementById('seccion-lectura').style.display = 'flex';
         
+        // Manejar fotos (si es un array de DB o texto de Vercel Blob)
+        let fotoUrl = 'https://via.placeholder.com/600x300/111/0cf?text=Sin+Portada';
+        if (historia.fotos) {
+            if (Array.isArray(historia.fotos) && historia.fotos.length > 0) fotoUrl = historia.fotos[0];
+            else if (typeof historia.fotos === 'string' && historia.fotos.length > 5) fotoUrl = historia.fotos;
+        }
+
         panelLectura.innerHTML = `
-            <div style="height:250px; background:url('${historia.portadas[0]}') center/cover; border-radius:12px; margin-bottom:20px;"></div>
-            <h1 class="aero-title-glow" style="text-align:center;">${historia.titulo}</h1>
+            <div style="height:250px; background:url('${fotoUrl}') center/cover; border-radius:12px; margin-bottom:20px;"></div>
+            <h1 class="aero-title-glow" style="text-align:center; color:white;">${historia.titulo}</h1>
         `;
 
+        // Generar párrafos con sus botones de comentarios
         const parrafos = historia.texto.split('\n\n');
         parrafos.forEach((p, idx) => {
-            const numCom = (historia.comentarios[idx]) ? historia.comentarios[idx].length : 0;
+            if (!p.trim()) return;
+            
+            const numCom = (historia.comentarios && historia.comentarios[idx]) ? historia.comentarios[idx].length : 0;
             const div = document.createElement('div');
             div.style.display = 'flex';
             div.style.marginBottom = '20px';
+            div.style.color = 'white';
+            
             div.innerHTML = `
-                <p style="flex:1; line-height:1.6;">${p}</p>
-                <button class="btn-comentario" onclick="window.abrirComentarios(${id}, ${idx})" style="background:none; border:1px solid #333; color:white; padding:5px 10px; border-radius:5px; cursor:pointer; margin-left:10px;">
+                <p style="flex:1; line-height:1.6; margin:0;">${p}</p>
+                <button class="btn-comentario" onclick="window.abrirComentarios(${id}, ${idx})" style="background:rgba(255,255,255,0.1); border:1px solid #333; color:white; padding:8px 12px; border-radius:8px; cursor:pointer; margin-left:15px; display:flex; align-items:center; gap:5px; height:fit-content; transition:0.3s;">
                     💬 <span id="contador-${id}-${idx}">${numCom}</span>
                 </button>
             `;
@@ -133,20 +164,31 @@ document.addEventListener('DOMContentLoaded', () => {
     // Render inicial de la biblioteca
     function render() {
         gridDescubrir.innerHTML = '';
+        if (historiasDb.length === 0) {
+            gridDescubrir.innerHTML = '<p style="color:#aaa;">No hay historias todavía. ¡Escribe la primera!</p>';
+            return;
+        }
+
         historiasDb.forEach(h => {
             const art = document.createElement('article');
             art.className = 'glassy-box';
+            art.style.cursor = 'pointer';
             art.onclick = () => window.abrirLectura(h.id);
-            art.innerHTML = `<h3>${h.titulo}</h3><p>Por: ${h.autor}</p>`;
+            art.innerHTML = `
+                <h3 style="color:white; margin-bottom:5px;">${h.titulo}</h3>
+                <p style="color:#00CCFF; font-size:0.9rem;">Por: ${h.autor || 'Anónimo'}</p>
+            `;
             gridDescubrir.appendChild(art);
         });
     }
 
+    // Botón de Volver/Descubrir
     document.getElementById('btn-descubre').onclick = () => {
         document.getElementById('seccion-descubrir').style.display = 'block';
         document.getElementById('seccion-lectura').style.display = 'none';
-        render();
+        cargarHistorias(); // Refrescar base de datos al volver
     };
 
-    render();
+    // Carga inicial
+    cargarHistorias();
 });
