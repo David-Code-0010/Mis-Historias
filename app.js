@@ -274,4 +274,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // INICIO DE LA APLICACIÓN
     // ==========================================
     cambiarPantalla('descubrir'); // Arrancamos en el menú principal
-});v
+});
