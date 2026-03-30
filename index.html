@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis-Historias | Dark Aero</title>
+    <title>Mis-Historias | Dark Aero Skeuomorphic</title>
     <link rel="stylesheet" href="./style.css">
 </head>
 <body class="aero-background">
@@ -30,30 +30,37 @@
             <div id="lista-historias-descubrir" class="historias-aero-grid"></div>
         </section>
 
-        <section id="seccion-lectura" class="hidden-aero">
-            <div class="flex-container">
-                <div class="flex-1 glassy-box p-30">
-                    <h2 id="lectura-titulo" class="aero-title-glow">Título de la Historia</h2>
-                    <div id="lectura-contenido" class="lectura-texto-estilo"></div>
-                </div>
-                <aside class="sidebar-aero">
-                    <div class="glassy-box sidebar-block">
-                        <h3 class="sidebar-aero-title">AUTOR</h3>
-                        <p id="lectura-autor" class="opinion-aero-author"></p>
-                    </div>
-                </aside>
+        <section id="seccion-lectura" class="hidden-aero flex-container">
+            <div class="flex-1 glassy-box p-30">
+                <button id="btn-volver" class="btn-aero-text mb-20">← Volver a Biblioteca</button>
+                <div id="lectura-contenido-dinamico"></div>
             </div>
+            <aside class="sidebar-aero sidebar-fixed">
+                <div class="glassy-box p-20">
+                    <h3 id="titulo-opiniones" class="sidebar-aero-title">LECTORES OPINAN ✨</h3>
+                    <div id="opiniones-contenedor" class="opiniones-scroll">
+                        <p class="empty-msg" style="color:var(--text-grey);">Selecciona una historia.</p>
+                    </div>
+                </div>
+            </aside>
         </section>
 
         <section id="seccion-escribir" class="hidden-aero">
             <div class="glassy-box p-30">
                 <h2 class="aero-title-glow">Nueva Historia</h2>
                 <form id="formulario-historia" class="formulario-aero">
-                    <input type="text" id="titulo-historia" placeholder="Título de la historia..." required>
-                    <input type="text" id="autor-historia" placeholder="Tu nombre o alias...">
-                    <input type="file" id="foto-historia" accept="image/*" class="responsive-file-input">
-                    <textarea id="contenido-historia" placeholder="Escribe tu historia aquí..." required></textarea>
-                    <button type="submit" class="btn-aero-submit">PUBLICAR EN NEON</button>
+                    <input type="text" id="titulo-historia" placeholder="TÍTULO DE TU RELATO..." required>
+                    <input type="text" id="autor-historia" placeholder="TU ALIAS EN EL SISTEMA...">
+                    
+                    <div class="mb-20 upload-zone">
+                        <label style="color:var(--aero-aqua-base); font-weight:bold; display:block; margin-bottom:10px;">Sube hasta 5 fotos (Portadas o Escenas):</label>
+                        <input type="file" id="fotos-historia" accept="image/*" multiple class="responsive-file-input">
+                        <div id="preview-fotos" class="preview-grid mt-10"></div>
+                    </div>
+
+                    <textarea id="contenido-historia" placeholder="Escribe tu historia aquí... Usa 'Enter' para crear nuevos párrafos comentables." required></textarea>
+                    
+                    <button type="submit" class="btn-aero-submit">PUBLICAR EN LA RED NEON</button>
                 </form>
             </div>
         </section>
@@ -62,7 +69,7 @@
             <div class="glassy-box p-30">
                 <h2 class="aero-title-glow" style="color:var(--aero-green-base)">Cerebro Colectivo</h2>
                 <div id="chat-window" class="opiniones-scroll" style="height:400px; background:rgba(0,0,0,0.4); padding:20px; border-radius:8px; margin-bottom:15px; border: 1px solid rgba(51,255,51,0.2);">
-                    <div class="msg-bot"><p>Hola, soy el guardián de la base de datos de Neon. ¿En qué puedo ayudarte hoy?</p></div>
+                    <div class="msg-bot"><p>Conectando con la base de datos de Neon... Estoy listo para charlar David.</p></div>
                 </div>
                 <div style="display:flex; gap:10px;">
                     <input type="text" id="input-bot" class="formulario-aero" placeholder="Pregunta sobre las historias..." style="margin:0; flex:1;">
