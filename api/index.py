@@ -1,19 +1,17 @@
 import os
 from flask import Flask, request, jsonify
-from flask_cors import CORS # Añadimos esto para evitar bloqueos del navegador
+from flask_cors import CORS
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
 app = Flask(__name__)
-CORS(app) # Esto permite que tu HTML hable con tu Python sin problemas
+CORS(app)
 
 def get_db_connection():
-    # El truco maestro: añadir sslmode=require para que Neon no te rechace
     db_url = os.environ.get('DATABASE_URL')
+    # Esto es lo que causaba el error rojo: Neon exige SSL
     if db_url and "sslmode=" not in db_url:
-        # Forzamos el modo seguro si no viene en la URL
         db_url += "?sslmode=require"
-    
     return psycopg2.connect(db_url, cursor_factory=RealDictCursor)
 
 @app.route('/api/historias', methods=['GET'])
@@ -27,11 +25,23 @@ def get_historias():
         cur.close()
         return jsonify(historias)
     except Exception as e:
-        print(f"Error en Neon: {e}") # Esto aparecerá en los logs de Vercel
         return jsonify({"error": str(e)}), 500
     finally:
-        if conn:
-            conn.close()
+        if conn: conn.close()
+
+# RUTA PARA TU BOT (Cerebro Colectivo)
+@app.route('/api/chat', methods=['POST'])
+def chat_bot():
+    data = request.json
+    user_msg = data.get('msg', '').lower()
+    
+    # Respuesta simple para probar que el puente funciona
+    if "hola" in user_msg:
+        reply = "Conexión establecida, David. Sistema Aero en línea."
+    else:
+        reply = "Procesando datos en la red Neon... ¿Qué más necesitas saber?"
+        
+    return jsonify({"reply": reply})
 
 @app.route('/api/publicar', methods=['POST'])
 def publicar():
@@ -40,17 +50,12 @@ def publicar():
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        # Aseguramos que 'fotos' sea un string o array manejable por Neon
-        cur.execute('INSERT INTO historias (titulo, autor, texto, fotos) VALUES (%s, %s, %s, %s)',
-                    (data['titulo'], data['autor'], data['texto'], data.get('fotos', [])))
+        cur.execute('INSERT INTO historias (titulo, autor, texto) VALUES (%s, %s, %s)',
+                    (data['titulo'], data['autor'], data['texto']))
         conn.commit()
         cur.close()
         return jsonify({"status": "success"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
-        if conn:
-            conn.close()
-
-if __name__ == '__main__':
-    app.run(debug=True)
+        if conn: conn.close()
