@@ -87,11 +87,15 @@ document.addEventListener('DOMContentLoaded', () => {
             art.onclick = () => window.abrirLectura(h.id);
             
             let miniatura = 'https://via.placeholder.com/600x300/111/0cf?text=Sin+Portada';
+            
+            // FILTRO DE COMILLAS APLICADO AQUÍ
             if (h.fotos) {
-                if (Array.isArray(h.fotos) && h.fotos.length > 0) miniatura = h.fotos[0];
-                else if (typeof h.fotos === 'string' && h.fotos.length > 5) {
+                if (Array.isArray(h.fotos) && h.fotos.length > 0) {
+                    miniatura = h.fotos[0].replace(/['"]/g, '');
+                } else if (typeof h.fotos === 'string' && h.fotos.length > 5) {
                     let urls = h.fotos.replace(/[{}]/g, '').split(',');
-                    if (urls[0].includes('http')) miniatura = urls[0].trim();
+                    let cleanUrl = urls[0].trim().replace(/['"]/g, '');
+                    if (cleanUrl.includes('http')) miniatura = cleanUrl;
                 }
             }
 
@@ -126,13 +130,15 @@ document.addEventListener('DOMContentLoaded', () => {
         cambiarPantalla('lectura');
         panelLectura.innerHTML = '';
 
-        // Preparar arreglo de fotos
+        // Preparar arreglo de fotos y LIMPIAR COMILLAS
         fotosActuales = ['https://via.placeholder.com/600x300/111/0cf?text=Sin+Portada'];
         if (historia.fotos) {
-            if (Array.isArray(historia.fotos) && historia.fotos.length > 0) fotosActuales = historia.fotos;
-            else if (typeof historia.fotos === 'string' && historia.fotos.length > 5) {
+            if (Array.isArray(historia.fotos) && historia.fotos.length > 0) {
+                fotosActuales = historia.fotos.map(u => typeof u === 'string' ? u.replace(/['"]/g, '') : u);
+            } else if (typeof historia.fotos === 'string' && historia.fotos.length > 5) {
                 let urls = historia.fotos.replace(/[{}]/g, '').split(',');
-                if (urls[0].includes('http')) fotosActuales = urls.map(u => u.trim());
+                let cleanUrls = urls.map(u => u.trim().replace(/['"]/g, ''));
+                if (cleanUrls[0].includes('http')) fotosActuales = cleanUrls;
             }
         }
 
@@ -215,7 +221,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.enviarComentario = async function() {
-        // Buscamos el input de forma infalible
         const inputComentario = document.querySelector('#caja-escribir-comentario input') || document.getElementById('nuevo-comentario');
         
         if(!inputComentario) {
@@ -255,7 +260,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Enganchar el botón "ENVIAR COMENTARIO" de forma segura sin importar cómo se llame su ID
     document.addEventListener('click', (e) => {
         if (e.target.closest('#caja-escribir-comentario button')) {
             window.enviarComentario();
