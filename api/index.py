@@ -13,10 +13,19 @@ CORS(app) # Vital para que el navegador no bloquee la conexión
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 def get_db_connection():
-    db_url = os.environ.get('DATABASE_URL')
-    # Si la URL no tiene el modo SSL, se lo pegamos a la fuerza
-    if db_url and "sslmode=" not in db_url:
-        db_url += "?sslmode=require"
+    # Buscamos primero la nueva llave generada por la integración de Neon
+    db_url = os.environ.get('DATABASE_URL_UNPOOLED') or os.environ.get('DATABASE_URL')
+    
+    if not db_url:
+        raise Exception("Falta la variable de entorno de la base de datos en Vercel.")
+        
+    # Nos aseguramos de que el escudo SSL esté activo
+    if "sslmode=" not in db_url:
+        if "?" in db_url:
+            db_url += "&sslmode=require"
+        else:
+            db_url += "?sslmode=require"
+            
     return psycopg2.connect(db_url, cursor_factory=RealDictCursor)
 
 # --- RUTAS DE LA BIBLIOTECA ---
