@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const textoCmt = inputCmt.value.trim();
 
         if (textoCmt !== '' && historiaActivaId !== null && parrafoActivoIndex !== null) {
-            const historia = historiasDb.find(h => h.id === idHistoria);
+            const historia = historiasDb.find(h => h.id === historiaActivaId);
             historia.comentarios[parrafoActivoIndex].push(textoCmt);
             
             inputCmt.value = '';
@@ -231,3 +231,51 @@ document.addEventListener('DOMContentLoaded', () => {
         const btnGuardar = e.target.querySelector('button[type="submit"]');
         const textoOriginalBtn = btnGuardar.innerText;
         btnGuardar.innerText = 'Subiendo historia y foto... (esto puede tardar)';
+        btnGuardar.disabled = true;
+
+        const titulo = document.getElementById('titulo-historia').value;
+        const contenido = document.getElementById('contenido-historia').value;
+        const fotoInput = document.getElementById('fotos-historia');
+
+        // 📸 NUEVO: Para enviar archivos, necesitamos usar FormData en lugar de JSON
+        const formData = new FormData();
+        formData.append('titulo', titulo);
+        formData.append('texto', contenido);
+        formData.append('autor', 'Autor Anónimo'); // Puedes añadir un input para esto después
+        
+        // Si hay una foto seleccionada, la añadimos al envío
+        if (fotoInput.files.length > 0) {
+            formData.append('foto', fotoInput.files[0]);
+        }
+
+        try {
+            // Mandamos los datos a Python/Vercel como form-data
+            const respuesta = await fetch('/api/historias', {
+                method: 'POST',
+                body: formData // No necesitamos JSON.stringify ni headers especiales
+            });
+
+            if (respuesta.ok) {
+                alert('¡Tu historia "' + titulo + '" y su portada se han guardado con éxito!');
+                e.target.reset();
+                previewGrid.innerHTML = '';
+                
+                // Volvemos a pedir las historias a la base de datos para ver la tuya
+                await cargarHistorias();
+                document.getElementById('btn-descubre').click();
+            } else {
+                alert('Ocurrió un error al guardar la historia.');
+            }
+        } catch (error) {
+            console.error('Error al guardar:', error);
+            alert('No se pudo comunicar con el servidor.');
+        } finally {
+            // Restauramos el botón
+            btnGuardar.innerText = textoOriginalBtn;
+            btnGuardar.disabled = false;
+        }
+    });
+
+    // Ejecutamos la carga desde la nube al abrir la página
+    cargarHistorias();
+});
