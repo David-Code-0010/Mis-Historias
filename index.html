@@ -3,82 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis-Historias | Dark Aero Skeuomorphic</title>
-    <link rel="stylesheet" href="./style.css">
+    <title>Mis Historias - Red Neon</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="aero-background">
     <div class="bubbles-overlay"></div>
 
     <header class="dark-aero-header">
         <div class="container header-content">
-            <h1 class="logo-aero">mis<span class="orange-glow">-historias</span></h1>
+            <div class="logo-aero">MIS-<span class="orange-glow">HISTORIAS</span></div>
             <nav class="aero-nav">
                 <div class="nav-group-left">
-                    <button id="btn-descubre" class="btn-aero-text active">Descubre</button>
+                    <button class="btn-aero-text active" onclick="mostrarSeccion('descubrir')">DESCUBRIR</button>
+                    <button class="btn-aero-text" onclick="mostrarSeccion('escribir')">ESCRIBIR</button>
                 </div>
                 <div class="nav-group-right">
-                    <button id="btn-crea" class="btn-aero-text">Escribir</button>
-                    <button id="btn-bot" class="btn-aero-text" style="color:var(--aero-green-base)">Bot 🤖</button>
+                    <div class="search-container-aero">
+                        <input type="text" placeholder="Buscar en la red...">
+                        <button class="btn-search-aero"></button>
+                    </div>
                 </div>
             </nav>
         </div>
     </header>
 
-    <main class="container main-content">
-        <section id="seccion-descubrir">
-            <h2 class="genre-title">BIBLIOTECA VIRTUAL</h2>
-            <div id="lista-historias-descubrir" class="historias-aero-grid"></div>
+    <main class="container">
+        <section id="seccion-descubrir" class="seccion-aero">
+            <h2 class="genre-title">BIBLIOTECA DE LA RED NEON</h2>
+            <div id="grid-historias" class="historias-aero-grid">
+                </div>
         </section>
 
-        <section id="seccion-lectura" class="hidden-aero flex-container">
-            <div class="flex-1 glassy-box p-30">
-                <button id="btn-volver" class="btn-aero-text mb-20">← Volver a Biblioteca</button>
-                <div id="lectura-contenido-dinamico"></div>
-            </div>
-            <aside class="sidebar-aero sidebar-fixed">
-                <div class="glassy-box p-20">
-                    <h3 id="titulo-opiniones" class="sidebar-aero-title">LECTORES OPINAN ✨</h3>
-                    <div id="opiniones-contenedor" class="opiniones-scroll">
-                        <p class="empty-msg" style="color:var(--text-grey);">Selecciona una historia.</p>
+        <section id="seccion-escribir" class="seccion-aero hidden-aero">
+            <div class="flex-container">
+                <div class="flex-1 glassy-box p-30">
+                    <h2 class="aero-title-glow">TRANSMITIR RELATO</h2>
+                    <form id="formulario-historia" class="formulario-aero">
+                        <input type="text" id="titulo" placeholder="TÍTULO DEL ARCHIVO..." required>
+                        <input type="text" id="autor" placeholder="IDENTIDAD DEL AUTOR...">
+                        
+                        <div class="mb-20">
+                            <label style="color:var(--aero-aqua-base); font-weight:bold;">CARGAR HASTA 5 ESCENAS:</label>
+                            <input type="file" id="fotos" multiple accept="image/*" class="responsive-file-input mt-10">
+                            <div id="preview-grid" class="preview-grid mt-10"></div>
+                        </div>
+
+                        <textarea id="texto" placeholder="Inicia la escritura... Cada párrafo podrá ser comentado individualmente por la red." required></textarea>
+                        
+                        <button type="submit" class="btn-aero-submit">PUBLICAR EN BASE DE DATOS NEON</button>
+                    </form>
+                </div>
+
+                <aside class="sidebar-aero">
+                    <div class="glassy-box sidebar-block">
+                        <h3 class="sidebar-aero-title">LECTORES OPINAN ✨</h3>
+                        <div id="comentarios-dinamicos" class="opiniones-scroll">
+                            <p class="opinion-aero-text" style="color:var(--text-grey);">Selecciona una historia para ver los comentarios por párrafo.</p>
+                        </div>
                     </div>
-                </div>
-            </aside>
-        </section>
-
-        <section id="seccion-escribir" class="hidden-aero">
-            <div class="glassy-box p-30">
-                <h2 class="aero-title-glow">Nueva Historia</h2>
-                <form id="formulario-historia" class="formulario-aero">
-                    <input type="text" id="titulo-historia" placeholder="TÍTULO DE TU RELATO..." required>
-                    <input type="text" id="autor-historia" placeholder="TU ALIAS EN EL SISTEMA...">
-                    
-                    <div class="mb-20 upload-zone">
-                        <label style="color:var(--aero-aqua-base); font-weight:bold; display:block; margin-bottom:10px;">Sube hasta 5 fotos (Portadas o Escenas):</label>
-                        <input type="file" id="fotos-historia" accept="image/*" multiple class="responsive-file-input">
-                        <div id="preview-fotos" class="preview-grid mt-10"></div>
-                    </div>
-
-                    <textarea id="contenido-historia" placeholder="Escribe tu historia aquí... Usa 'Enter' para crear nuevos párrafos comentables." required></textarea>
-                    
-                    <button type="submit" class="btn-aero-submit">PUBLICAR EN LA RED NEON</button>
-                </form>
-            </div>
-        </section>
-
-        <section id="seccion-bot" class="hidden-aero">
-            <div class="glassy-box p-30">
-                <h2 class="aero-title-glow" style="color:var(--aero-green-base)">Cerebro Colectivo</h2>
-                <div id="chat-window" class="opiniones-scroll" style="height:400px; background:rgba(0,0,0,0.4); padding:20px; border-radius:8px; margin-bottom:15px; border: 1px solid rgba(51,255,51,0.2);">
-                    <div class="msg-bot"><p>Conectando con la base de datos de Neon... Estoy listo para charlar David.</p></div>
-                </div>
-                <div style="display:flex; gap:10px;">
-                    <input type="text" id="input-bot" class="formulario-aero" placeholder="Pregunta sobre las historias..." style="margin:0; flex:1;">
-                    <button id="btn-enviar-bot" class="btn-aero-submit" style="width:auto; padding: 0 30px;">Enviar</button>
-                </div>
+                </aside>
             </div>
         </section>
     </main>
 
-    <script src="./app.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
