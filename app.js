@@ -1,34 +1,4 @@
-// Base de datos de prueba de Mis-Historias (2012 Skeuo)
-let historiasDb = [
-    { 
-        id: 1, 
-        titulo: 'Oscuridad Neón', 
-        autor: 'Cyber_Anna',
-        portadas: [
-            'https://via.placeholder.com/300x450/111/0cf?text=Neon+Cover+1',
-            'https://via.placeholder.com/300x450/222/0cf?text=Neon+Scene+2',
-            'https://via.placeholder.com/300x450/111/3f3?text=Neon+Alien+3'
-        ],
-        texto: "La luz de la ciudad se reflejaba en el asfalto mojado. Todo era azul y naranja.\n\nÉl me miró con esos ojos que parecían circuitos integrados y supe que estaba perdida.\n\nNo había vuelta atrás, el sistema nos había detectado.",
-        comentarios: {
-            0: ["¡Amo esa descripción del asfalto!"],
-            1: ["Vibras estéticas totales", "Qué intenso"],
-            2: []
-        }
-    },
-    { 
-        id: 2, 
-        titulo: 'Reglas del Juego', 
-        autor: 'AeroWriter',
-        portadas: ['https://via.placeholder.com/300x450/111/f90?text=Rules+Cover'],
-        texto: "Regla número 1: No confíes en nadie con un perfil sin foto.\n\nRegla número 2: Nunca reveles tu verdadera identidad en la red.",
-        comentarios: {
-            0: ["Totalmente cierto jaja", "Qué intenso inicio"],
-            1: []
-        }
-    }
-];
-
+let historiasDb = []; // Empieza vacío y se llena con la base de datos
 let historiaActivaId = null;
 let parrafoActivoIndex = null;
 let carruselIndex = 0; 
@@ -44,10 +14,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const seccionLectura = document.getElementById('seccion-lectura');
     const seccionEscribir = document.getElementById('seccion-escribir');
 
+    // Función: Trae las historias reales desde Neon
+    async function cargarHistorias() {
+        try {
+            const respuesta = await fetch('/api/historias');
+            const historiasBaseDatos = await respuesta.json();
+            
+            // Adaptamos los datos para que funcionen con tu diseño
+            historiasDb = historiasBaseDatos.map(h => ({
+                id: h.id,
+                titulo: h.titulo,
+                autor: h.autor,
+                texto: h.texto,
+                // 📸 NUEVO: Usamos la 'portada_url' real o una genérica si es null
+                portadas: h.portada_url ? [h.portada_url] : ['https://via.placeholder.com/300x450/111/0cf?text=' + encodeURIComponent(h.titulo)],
+                comentarios: {} // Comentarios vacíos por ahora
+            }));
+            
+            renderInicio(historiasDb);
+        } catch (error) {
+            console.error("Error al conectar con la base de datos:", error);
+            gridDescubrir.innerHTML = '<p style="color:red; text-align:center; padding:20px;">Error al cargar la base de datos. Verifica tu conexión.</p>';
+        }
+    }
+
     function renderInicio(datos = historiasDb) {
         gridDescubrir.innerHTML = '';
         if (datos.length === 0) {
-            gridDescubrir.innerHTML = '<p style="color:var(--text-grey);">No se encontraron historias con ese nombre.</p>';
+            gridDescubrir.innerHTML = '<p style="color:var(--text-grey); text-align:center; width:100%; padding:20px;">Aún no hay historias guardadas. ¡Sé el primero en escribir una!</p>';
             return;
         }
 
@@ -65,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Lógica de Búsqueda (Sin cambios) ---
     const searchInput = document.getElementById('search-input');
     searchInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
@@ -76,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // --- Lógica de Lectura (Sin cambios importantes) ---
     function abrirLectura(id) {
         const historia = historiasDb.find(h => h.id === id);
         historiaActivaId = id;
@@ -131,6 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cajaComentario.classList.add('hidden-aero');
     }
 
+    // --- Funciones globales (Sin cambios) ---
     window.cambiarFoto = (direccion) => {
         const historia = historiasDb.find(h => h.id === historiaActivaId);
         const imgElement = document.getElementById('carousel-img-aero');
@@ -152,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const historia = historiasDb.find(h => h.id === idHistoria);
         const comentarios = historia.comentarios[indexParrafo];
 
-        tituloOpiniones.innerText = `PÁRRAFO ${indexParrafo + 1} ✨`;
+        tituloOpiniones.innerText = \`PÁRRAFO \${indexParrafo + 1} ✨\`;
         cajaComentario.classList.remove('hidden-aero');
         panelOpiniones.innerHTML = '';
 
@@ -172,12 +169,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // --- Eventos de Botones (Sin cambios) ---
     document.getElementById('btn-enviar-comentario').addEventListener('click', () => {
         const inputCmt = document.getElementById('input-nuevo-comentario');
         const textoCmt = inputCmt.value.trim();
 
         if (textoCmt !== '' && historiaActivaId !== null && parrafoActivoIndex !== null) {
-            const historia = historiasDb.find(h => h.id === historiaActivaId);
+            const historia = historiasDb.find(h => h.id === idHistoria);
             historia.comentarios[parrafoActivoIndex].push(textoCmt);
             
             inputCmt.value = '';
@@ -205,55 +203,31 @@ document.addEventListener('DOMContentLoaded', () => {
         seccionEscribir.classList.remove('hidden-aero');
     });
 
+    // --- Lógica de Preview de Fotos (Sin cambios) ---
     const inputFotos = document.getElementById('fotos-historia');
     const previewGrid = document.getElementById('preview-fotos');
 
     inputFotos.addEventListener('change', function(e) {
         previewGrid.innerHTML = '';
-        const files = Array.from(e.target.files).slice(0, 5);
-        files.forEach(file => {
-            if (file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    const img = document.createElement('img');
-                    img.src = event.target.result;
-                    img.className = 'preview-img';
-                    previewGrid.appendChild(img);
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    });
-
-    document.getElementById('formulario-historia').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const titulo = document.getElementById('titulo-historia').value;
-        const contenido = document.getElementById('contenido-historia').value;
-        
-        const imagenesPreview = document.querySelectorAll('.preview-img');
-        let portadasFinales = [];
-        
-        if (imagenesPreview.length > 0) {
-            portadasFinales = Array.from(imagenesPreview).map(img => img.src);
-        } else {
-            portadasFinales = ['https://via.placeholder.com/300x450/111/f90?text=Mis+Historias'];
+        // Para este proyecto básico, solo subiremos LA PRIMERA foto
+        const file = e.target.files[0]; 
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = document.createElement('img');
+                img.src = event.target.result;
+                img.className = 'preview-img';
+                previewGrid.appendChild(img);
+            };
+            reader.readAsDataURL(file);
         }
-
-        const nuevaHistoria = {
-            id: historiasDb.length + 1,
-            titulo: titulo,
-            autor: 'Tú (Autor)',
-            portadas: portadasFinales, 
-            texto: contenido,
-            comentarios: {} 
-        };
-
-        historiasDb.unshift(nuevaHistoria);
-        alert('¡Tu historia "' + titulo + '" se ha publicado con éxito en Mis-Historias!');
-        e.target.reset();
-        previewGrid.innerHTML = '';
-        document.getElementById('btn-descubre').click();
     });
 
-    renderInicio();
-});
+    // 🌟 NUEVO EVENTO: Enviar los datos (y la foto) a la NUBE al guardar
+    document.getElementById('formulario-historia').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Cambiamos el texto del botón para que el usuario sepa que está cargando
+        const btnGuardar = e.target.querySelector('button[type="submit"]');
+        const textoOriginalBtn = btnGuardar.innerText;
+        btnGuardar.innerText = 'Subiendo historia y foto... (esto puede tardar)';
