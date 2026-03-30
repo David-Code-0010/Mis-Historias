@@ -1,104 +1,327 @@
-/* CONFIGURACIÓN DARK AERO SKEUOMÓRFICA MIS-HISTORIAS */
-/* Actualizado para forzar el despliegue en Vercel */
+/* Dark Aero — estilo completo para el HTML proporcionado */
+/* Fuente recomendada: puedes cambiarla por Inter/Roboto/Plus Jakarta */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
 
-:root {
-  --bg-deep: #050505;
-  --bg-dark-grey: #1a1a1a;
-  --bg-dark-aero: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
-  --aero-aqua-base: #00CCFF;
-  --aero-aqua-glow: #0066CC;
-  --aero-green-base: #33FF33; 
-  --brand-orange-skeuo: linear-gradient(180deg, #FF9900 0%, #FF6600 50%, #FF4400 100%);
-  --brand-orange-depth: #CC3300;
-  --glass-glossy: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 100%);
-  --pure-white: #FFFFFF;
-  --text-grey: #AAA;
+:root{
+  --bg-900: #060607;            /* fondo profundo */
+  --bg-800: #0b0b0c;
+  --glass: rgba(255,255,255,0.03);
+  --glass-2: rgba(255,255,255,0.04);
+  --aero-aqua-base: #00ffd5;
+  --aero-aqua-glow: rgba(0,255,213,0.12);
+  --aero-green-base: #09ff7a;
+  --aero-orange: #ff8b3d;
+  --muted: #9aa0a6;
+  --text: #e6eef3;
+  --text-dim: #b5bcc2;
+  --accent-border: rgba(255,255,255,0.06);
+  --focus: 0 8px 30px rgba(0,255,213,0.06);
+  --neon-outline: 0 0 18px rgba(0,255,213,0.10), inset 0 1px 0 rgba(255,255,255,0.02);
+  --glass-border: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  --radius-lg: 14px;
+  --radius-md: 10px;
+  --radius-sm: 8px;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  color: var(--pure-white);
-  line-height: 1.6;
-  background-color: var(--bg-deep);
-  min-height: 100vh;
+/* Layout & base */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: radial-gradient(1200px 600px at 10% 10%, rgba(0,255,213,0.02), transparent),
+              radial-gradient(1000px 500px at 90% 80%, rgba(9,255,122,0.02), transparent),
+              var(--bg-900);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  min-height:100vh;
+  position:relative;
+  overflow-y:auto;
+  padding-bottom:40px;
 }
 
-.aero-background { background: var(--bg-dark-aero); }
-
-.bubbles-overlay {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
-  background-size: 50px 50px;
-  pointer-events: none; z-index: -1;
+/* Decorative soft glossy cubes / bubbles overlay */
+.bubbles-overlay{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(0,0,0,0.6) 0 8%, transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(0,0,0,0.6) 0 6%, transparent 40%),
+    linear-gradient(180deg, rgba(255,255,255,0.01), transparent 40%);
+  mix-blend-mode: overlay;
+  opacity:0.9;
+  z-index:0;
 }
 
-.container { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
-.hidden-aero { display: none !important; }
-
-.dark-aero-header {
-  background: linear-gradient(180deg, #1A1A1A 0%, #000 100%);
-  border-bottom: 3px solid #FF6600; 
-  position: sticky; top: 0; z-index: 1000;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.9);
+/* Container */
+.container{
+  width: min(1180px, 94%);
+  margin: 28px auto;
+  position:relative;
+  z-index:1;
 }
 
-.logo-aero { font-family: 'Times New Roman', serif; font-size: 28px; }
-.orange-glow { color: #FF9900; text-shadow: 0 0 10px rgba(255,102,0,0.8); }
-
-.header-content { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; }
-.aero-nav { display: flex; gap: 20px; }
-
-.btn-aero-text {
-  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
-  border-bottom: 2px solid rgba(255,255,255,0.15);
-  color: #EEE; font-size: 13px; font-weight: bold; cursor: pointer;
-  padding: 8px 15px; border-radius: 4px; transition: 0.2s;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+/* Header */
+.dark-aero-header{
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+  border-radius: 12px;
+  padding:16px;
+  box-shadow: 0 6px 30px rgba(0,0,0,0.6), var(--focus);
+  border: 1px solid rgba(255,255,255,0.02);
+  backdrop-filter: blur(8px) saturate(120%);
 }
 
-.btn-aero-text:hover, .btn-aero-text.active {
-  color: #FF9900; border-color: #FF9900; background: rgba(255,153,0,0.1);
+/* Header content layout */
+.header-content{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
 }
 
-.glassy-box {
-  background: rgba(18, 18, 18, 0.8); backdrop-filter: blur(15px);
-  border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-  position: relative;
+/* Logo */
+.logo-aero{
+  font-weight:800;
+  letter-spacing: -0.02em;
+  font-size:1.25rem;
+  margin:0;
+  color:var(--text);
+  text-transform:lowercase;
+  display:flex;
+  align-items:center;
+}
+.logo-aero .orange-glow{
+  color:var(--aero-orange);
+  margin-left:6px;
+  text-shadow: 0 6px 28px rgba(255,139,61,0.07), 0 0 8px rgba(255,139,61,0.06);
 }
 
-.glassy-box::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 50%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
-  border-radius: 12px 12px 0 0; pointer-events: none;
+/* Navigation */
+.aero-nav { display:flex; gap:10px; align-items:center; }
+.nav-group-left, .nav-group-right { display:flex; gap:10px; align-items:center; }
+
+.btn-aero-text{
+  appearance:none;
+  background:transparent;
+  border:1px solid transparent;
+  color:var(--text-dim);
+  padding:8px 12px;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+  transition: all .18s ease;
+  letter-spacing:0.02em;
+}
+.btn-aero-text:hover{
+  color:var(--text);
+  transform:translateY(-2px);
+  text-shadow: 0 6px 24px rgba(0,0,0,0.6), 0 0 8px rgba(0,255,213,0.03);
+}
+.btn-aero-text.active{
+  color:var(--aero-aqua-base);
+  box-shadow: var(--neon-outline);
+  border: 1px solid rgba(0,255,213,0.06);
+  background: linear-gradient(180deg, rgba(0,255,213,0.02), rgba(255,255,255,0.01));
 }
 
-.formulario-aero input[type="text"], .formulario-aero textarea {
-    width: 100%; padding: 18px; margin-bottom: 25px;
-    background: rgba(0, 0, 0, 0.7);
-    border: 1px solid #333; border-top: 2px solid #000;
-    border-radius: 8px; color: var(--pure-white); font-size: 16px;
-    box-shadow: inset 0 2px 10px rgba(0,0,0,0.9);
+/* Main */
+.main-content{ margin-top:20px; display:block; gap:20px; }
+
+/* Sections */
+.hidden-aero{ display:none; }
+.flex-container{ display:flex; gap:20px; align-items:flex-start; }
+.flex-1{ flex:1; }
+
+/* Glassy boxes used throughout */
+.glassy-box{
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255,255,255,0.03);
+  padding:20px;
+  box-shadow: 0 10px 30px rgba(2,8,12,0.6), 0 1px 0 rgba(255,255,255,0.02) inset;
+  backdrop-filter: blur(8px) saturate(120%);
 }
 
-.formulario-aero textarea { min-height: 550px; line-height: 1.6; }
-
-.btn-aero-submit {
-    background: var(--brand-orange-skeuo); color: white;
-    padding: 22px; border-radius: 10px; border: 1px solid #FF9900;
-    border-bottom: 6px solid var(--brand-orange-depth);
-    font-weight: 900; font-size: 18px; text-transform: uppercase;
-    cursor: pointer; width: 100%;
+/* Titles */
+.genre-title{
+  color:var(--text-dim);
+  letter-spacing:0.12em;
+  font-size:0.82rem;
+  margin:0 0 14px 0;
+}
+.aero-title-glow{
+  color:var(--text);
+  text-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 18px rgba(0,255,213,0.06);
 }
 
-.historias-aero-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px; }
-
-.preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 12px; }
-.preview-img { width: 100%; height: 80px; object-fit: cover; border: 2px solid var(--aero-aqua-base); border-radius: 4px; }
-
-@media (max-width: 768px) {
-    .formulario-aero textarea { min-height: 70vh; }
-    .header-content { flex-direction: column; gap: 10px; }
+/* Grid of stories */
+.historias-aero-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+  gap:18px;
+  margin-top:12px;
 }
+.historias-aero-grid > *{
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.18));
+  border-radius: 12px;
+  padding:12px;
+  border:1px solid rgba(255,255,255,0.02);
+  transition: transform .18s cubic-bezier(.2,.9,.3,1), box-shadow .18s;
+  overflow:hidden;
+}
+.historias-aero-grid > *:hover{
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 18px 50px rgba(2,10,12,0.7), 0 0 30px rgba(0,255,213,0.03);
+}
+
+/* Sidebar */
+.sidebar-aero{
+  width:320px;
+  position:relative;
+}
+.sidebar-fixed{
+  top:0;
+  height:fit-content;
+}
+.sidebar-aero-title{
+  margin:0 0 10px 0;
+  color:var(--text-dim);
+  font-size:0.95rem;
+}
+
+/* Opinions scroll area */
+.opiniones-scroll{
+  max-height:420px;
+  overflow:auto;
+  padding-right:6px;
+}
+.opiniones-scroll::-webkit-scrollbar{ width:8px }
+.opiniones-scroll::-webkit-scrollbar-thumb{
+  background: linear-gradient(180deg, rgba(0,255,213,0.10), rgba(9,255,122,0.06));
+  border-radius:8px;
+}
+
+/* Buttons submit style */
+.btn-aero-submit{
+  background: linear-gradient(90deg, rgba(0,255,213,0.10), rgba(9,255,122,0.06));
+  color:var(--text);
+  border:1px solid rgba(0,255,213,0.12);
+  padding:12px 18px;
+  border-radius:12px;
+  font-weight:700;
+  letter-spacing:0.06em;
+  cursor:pointer;
+  box-shadow: 0 6px 30px rgba(0,0,0,0.6), 0 0 24px rgba(0,255,213,0.04);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.btn-aero-submit:hover{ transform: translateY(-3px); box-shadow: 0 18px 50px rgba(0,0,0,0.7), 0 0 40px rgba(0,255,213,0.08); }
+
+/* Forms & inputs */
+.formulario-aero input[type="text"],
+.formulario-aero textarea,
+#input-bot{
+  width:100%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(0,0,0,0.16));
+  border:1px solid rgba(255,255,255,0.02);
+  color:var(--text);
+  padding:12px 14px;
+  border-radius:10px;
+  outline:none;
+  transition: box-shadow .12s ease, border-color .12s ease, transform .12s;
+  font-size:0.95rem;
+}
+.formulario-aero input::placeholder,
+.formulario-aero textarea::placeholder{ color:rgba(180,188,195,0.38); font-weight:500; }
+.formulario-aero input[type="file"]{ color:var(--text-dim); }
+.formulario-aero input[type="text"]:focus,
+.formulario-aero textarea:focus,
+#input-bot:focus{
+  box-shadow: var(--focus);
+  border-color: rgba(0,255,213,0.18);
+  transform: translateY(-2px);
+}
+
+/* Textarea specifics */
+textarea#contenido-historia{
+  min-height:220px;
+  resize:vertical;
+  line-height:1.55;
+  font-size:0.98rem;
+}
+
+/* Preview grid */
+.preview-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px,1fr));
+  gap:8px;
+}
+.preview-grid img{
+  width:100%;
+  height:80px;
+  object-fit:cover;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,0.03);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+}
+
+/* Small helper utilities */
+.p-20{ padding:20px }
+.p-30{ padding:30px }
+.mb-20{ margin-bottom:20px }
+.mt-10{ margin-top:10px }
+
+/* Message styles */
+.msg-bot, .msg-user{
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.14));
+  border-radius:10px;
+  padding:10px 12px;
+  margin-bottom:10px;
+  border:1px solid rgba(255,255,255,0.02);
+  color:var(--text-dim);
+}
+.msg-bot p{ margin:0; color:var(--text-dim) }
+
+/* Tiny neon accents for highlighted text */
+.important{
+  color:var(--aero-aqua-base);
+  text-shadow: 0 6px 24px rgba(0,255,213,0.06);
+  font-weight:700;
+}
+
+/* Responsiveness */
+@media (max-width:920px){
+  .flex-container{ flex-direction:column; }
+  .sidebar-aero{ width:100%; }
+  .header-content{ flex-direction:column; align-items:flex-start; gap:14px; }
+}
+
+/* Subtle animated sheen on glassy boxes (optional) */
+@keyframes sheen {
+  0%{ background-position: -200% 0; }
+  100%{ background-position: 200% 0; }
+}
+.glassy-box::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+  background: linear-gradient(90deg, rgba(255,255,255,0.00) 0%, rgba(255,255,255,0.02) 45%, rgba(255,255,255,0.00) 100%);
+  mix-blend-mode: overlay;
+  opacity:0.6;
+  transform:translateZ(0);
+  animation: sheen 12s linear infinite;
+  background-size: 400% 100%;
+  border-radius:inherit;
+}
+
+/* Accessibility: focus visible */
+:focus{ outline:none; }
+button:focus, input:focus, textarea:focus{
+  box-shadow: 0 0 0 3px rgba(0,255,213,0.06), var(--focus);
+}
+
+/* Small tweaks for darker accents */
+.empty-msg{ font-style:italic; color:var(--text-dim); text-align:left; }
