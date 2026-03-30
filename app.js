@@ -4,6 +4,7 @@
 let historiasDb = [];
 let historiaActivaId = null;
 let parrafoActivoIndex = null;
+let fotosActuales = []; // Para el carrusel
 let carruselIndex = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -14,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const tituloOpiniones = document.getElementById('titulo-opiniones');
     const cajaComentario = document.getElementById('caja-escribir-comentario');
     
-    // Secciones de pantalla
     const seccionDescubrir = document.getElementById('seccion-descubrir');
     const seccionLectura = document.getElementById('seccion-lectura');
     const seccionEscribir = document.getElementById('seccion-escribir');
@@ -24,29 +24,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // SISTEMA DE NAVEGACIÓN
     // ==========================================
     function cambiarPantalla(pantalla) {
-        // Apagamos todas las pantallas
         if(seccionDescubrir) seccionDescubrir.style.display = 'none';
         if(seccionLectura) seccionLectura.style.display = 'none';
         if(seccionEscribir) seccionEscribir.style.display = 'none';
         if(seccionBot) seccionBot.style.display = 'none';
 
-        // Encendemos la que toca
         if (pantalla === 'descubrir') {
             seccionDescubrir.style.display = 'block';
-            cargarHistorias(); // Recargar desde Neon siempre que volvamos al inicio
-        } 
-        else if (pantalla === 'lectura') {
+            cargarHistorias();
+        } else if (pantalla === 'lectura') {
             seccionLectura.style.display = 'flex'; 
-        } 
-        else if (pantalla === 'escribir') {
+        } else if (pantalla === 'escribir') {
             seccionEscribir.style.display = 'block';
-        } 
-        else if (pantalla === 'bot') {
+        } else if (pantalla === 'bot') {
             seccionBot.style.display = 'block';
         }
     }
 
-    // Botones del menú
     const btnDescubre = document.getElementById('btn-descubre');
     const btnCrea = document.getElementById('btn-crea');
     const btnBot = document.getElementById('btn-bot');
@@ -92,10 +86,14 @@ document.addEventListener('DOMContentLoaded', () => {
             art.style.cursor = 'pointer';
             art.onclick = () => window.abrirLectura(h.id);
             
-            // Extraer miniatura si existe
-            let miniatura = 'https://via.placeholder.com/600x300/111/0cf?text=Neon';
-            if (h.fotos && h.fotos.length > 0) miniatura = h.fotos[0];
-            else if (typeof h.fotos === 'string') miniatura = h.fotos;
+            let miniatura = 'https://via.placeholder.com/600x300/111/0cf?text=Sin+Portada';
+            if (h.fotos) {
+                if (Array.isArray(h.fotos) && h.fotos.length > 0) miniatura = h.fotos[0];
+                else if (typeof h.fotos === 'string' && h.fotos.length > 5) {
+                    let urls = h.fotos.replace(/[{}]/g, '').split(',');
+                    if (urls[0].includes('http')) miniatura = urls[0].trim();
+                }
+            }
 
             art.innerHTML = `
                 <div style="background-image: url('${miniatura}'); height: 150px; background-size: cover; background-position: center; border-radius: 8px; margin-bottom: 10px;"></div>
@@ -107,8 +105,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
-    // LECTURA DE HISTORIAS
+    // LECTURA DE HISTORIAS Y CARRUSEL
     // ==========================================
+    window.cambiarFoto = function(direccion) {
+        carruselIndex += direccion;
+        if (carruselIndex < 0) carruselIndex = fotosActuales.length - 1;
+        if (carruselIndex >= fotosActuales.length) carruselIndex = 0;
+        const img = document.getElementById('img-carrusel');
+        if (img) img.src = fotosActuales[carruselIndex];
+    };
+
     window.abrirLectura = function(id) {
         const historia = historiasDb.find(h => h.id === id);
         if (!historia || !panelLectura) return;
@@ -120,13 +126,29 @@ document.addEventListener('DOMContentLoaded', () => {
         cambiarPantalla('lectura');
         panelLectura.innerHTML = '';
 
-        let miniatura = 'https://via.placeholder.com/600x300/111/0cf?text=Neon';
-        if (historia.fotos && historia.fotos.length > 0) miniatura = historia.fotos[0];
-        else if (typeof historia.fotos === 'string') miniatura = historia.fotos;
+        // Preparar arreglo de fotos
+        fotosActuales = ['https://via.placeholder.com/600x300/111/0cf?text=Sin+Portada'];
+        if (historia.fotos) {
+            if (Array.isArray(historia.fotos) && historia.fotos.length > 0) fotosActuales = historia.fotos;
+            else if (typeof historia.fotos === 'string' && historia.fotos.length > 5) {
+                let urls = historia.fotos.replace(/[{}]/g, '').split(',');
+                if (urls[0].includes('http')) fotosActuales = urls.map(u => u.trim());
+            }
+        }
+
+        // Crear flechas si hay más de 1 foto
+        let flechas = '';
+        if (fotosActuales.length > 1) {
+             flechas = `
+                <button onclick="window.cambiarFoto(-1)" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.6); color:white; border:1px solid #00CCFF; padding:8px 12px; cursor:pointer; border-radius:50%; z-index:10; font-size:1.2rem;">◀</button>
+                <button onclick="window.cambiarFoto(1)" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.6); color:white; border:1px solid #00CCFF; padding:8px 12px; cursor:pointer; border-radius:50%; z-index:10; font-size:1.2rem;">▶</button>
+             `;
+        }
 
         panelLectura.innerHTML += `
-            <div style="position: relative; width: 100%; height: 250px; margin-bottom: 20px; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
-                <img src="${miniatura}" style="width: 100%; height: 100%; object-fit: cover;">
+            <div style="position: relative; width: 100%; height: 250px; margin-bottom: 20px; border-radius: 12px; overflow: hidden; border: 1px solid rgba(0, 204, 255, 0.2); background: #050505;">
+                <img id="img-carrusel" src="${fotosActuales[0]}" style="width: 100%; height: 100%; object-fit: contain;">
+                ${flechas}
             </div>
             <h1 class="aero-title-glow" style="text-align:center; color:white; margin-bottom:30px;">${historia.titulo}</h1>
         `;
@@ -134,15 +156,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const parrafos = historia.texto.split(/\n+/);
         parrafos.forEach((p, idx) => {
             if (!p.trim()) return;
-            
-            // Buscar cuántos comentarios tiene este párrafo en la DB
             const numCom = (historia.comentarios && historia.comentarios[idx]) ? historia.comentarios[idx].length : 0;
-            
             const div = document.createElement('div');
             div.style.display = 'flex';
             div.style.justifyContent = 'space-between';
             div.style.marginBottom = '20px';
-            
             div.innerHTML = `
                 <p style="flex:1; color:white; line-height:1.6; font-size:1.05rem; margin:0; padding-right:15px;">${p}</p>
                 <button onclick="window.abrirComentarios(${id}, ${idx})" style="background:rgba(255,255,255,0.05); border:1px solid #00CCFF; color:white; padding:8px 15px; border-radius:8px; cursor:pointer; height:fit-content; transition:0.3s;">
@@ -152,14 +170,13 @@ document.addEventListener('DOMContentLoaded', () => {
             panelLectura.appendChild(div);
         });
 
-        // Resetear panel lateral al abrir una historia nueva
         if(tituloOpiniones) tituloOpiniones.innerText = 'OPINIONES ✨';
         if(panelOpiniones) panelOpiniones.innerHTML = '<p class="empty-msg" style="color:#aaa; text-align:center;">Haz clic en el icono 💬 de un párrafo para opinar.</p>';
         if(cajaComentario) cajaComentario.style.display = 'none';
     };
 
     // ==========================================
-    // COMENTARIOS (LEER Y ENVIAR A NEON)
+    // COMENTARIOS
     // ==========================================
     window.abrirComentarios = function(id, index) {
         historiaActivaId = id;
@@ -198,11 +215,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.enviarComentario = async function() {
-        const inputComentario = document.getElementById('nuevo-comentario');
-        if(!inputComentario) return;
+        // Buscamos el input de forma infalible
+        const inputComentario = document.querySelector('#caja-escribir-comentario input') || document.getElementById('nuevo-comentario');
+        
+        if(!inputComentario) {
+            console.error("No se detecta la caja de texto en el HTML.");
+            return;
+        }
 
         const texto = inputComentario.value.trim();
-        if (!texto || historiaActivaId === null || parrafoActivoIndex === null) return;
+        if (!texto) return;
+        if (historiaActivaId === null || parrafoActivoIndex === null) return;
 
         const datosComentario = { historia_id: historiaActivaId, parrafo_idx: parrafoActivoIndex, contenido: texto };
 
@@ -219,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!historia.comentarios[parrafoActivoIndex]) historia.comentarios[parrafoActivoIndex] = [];
                 
                 historia.comentarios[parrafoActivoIndex].push(texto);
-                inputComentario.value = '';
+                inputComentario.value = ''; // Limpiamos la caja
                 actualizarListaComentarios(historia, parrafoActivoIndex);
                 
                 const contador = document.getElementById(`contador-${historiaActivaId}-${parrafoActivoIndex}`);
@@ -232,9 +255,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Enganchar botón de enviar comentario
-    const btnEnviarComentario = document.querySelector('#caja-escribir-comentario button');
-    if (btnEnviarComentario) btnEnviarComentario.addEventListener('click', window.enviarComentario);
+    // Enganchar el botón "ENVIAR COMENTARIO" de forma segura sin importar cómo se llame su ID
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('#caja-escribir-comentario button')) {
+            window.enviarComentario();
+        }
+    });
 
     // ==========================================
     // PUBLICAR NUEVA HISTORIA
@@ -247,8 +273,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const autor = document.getElementById('autor-historia').value || 'Anónimo';
             const texto = document.getElementById('contenido-historia').value;
             
-            // (Si usas carga de imágenes por Vercel Blob luego lo conectas, por ahora usamos placeholder o las previas)
-            const fotos = ['https://via.placeholder.com/600x300/222/0cf?text=Nueva+Historia'];
+            // Si el usuario no sube fotos, pasamos estas por defecto para que las flechas tengan algo que mostrar
+            const fotos = [
+                'https://via.placeholder.com/600x300/111/0cf?text=Portada+Principal',
+                'https://via.placeholder.com/600x300/222/f0c?text=Imagen+Adicional+1'
+            ];
 
             try {
                 const res = await fetch('/api/publicar', {
@@ -258,9 +287,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (res.ok) {
-                    alert('¡Historia publicada con éxito!');
                     formHistoria.reset();
-                    if(btnDescubre) btnDescubre.click(); // Te regresa al menú principal
+                    if(btnDescubre) btnDescubre.click();
                 } else {
                     alert('Error al publicar la historia.');
                 }
@@ -273,5 +301,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // INICIO DE LA APLICACIÓN
     // ==========================================
-    cambiarPantalla('descubrir'); // Arrancamos en el menú principal
+    cambiarPantalla('descubrir'); 
 });
