@@ -84,21 +84,70 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Abrir una historia
+    // ==========================================
+    // SISTEMA DE NAVEGACIÓN MAESTRO (A PRUEBA DE FALLOS)
+    // ==========================================
+    function cambiarPantalla(pantalla) {
+        // 1. Apagamos TODAS las pantallas a la fuerza
+        seccionDescubrir.style.display = 'none';
+        seccionLectura.style.display = 'none';
+        seccionEscribir.style.display = 'none';
+        seccionBot.style.display = 'none';
+
+        // 2. Encendemos SOLO la que pedimos
+        if (pantalla === 'descubrir') {
+            seccionDescubrir.style.display = 'block';
+            renderInicio(); // Refrescamos la biblioteca
+        } 
+        else if (pantalla === 'lectura') {
+            seccionLectura.style.display = 'flex'; // Usamos flex para la barra lateral
+        } 
+        else if (pantalla === 'escribir') {
+            seccionEscribir.style.display = 'block';
+        } 
+        else if (pantalla === 'bot') {
+            seccionBot.style.display = 'block';
+        }
+    }
+
+    // --- EVENTOS DE LOS BOTONES ---
+
+    document.getElementById('btn-descubre').addEventListener('click', (e) => {
+        document.querySelectorAll('.aero-nav button').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        searchInput.value = ''; 
+        cambiarPantalla('descubrir');
+    });
+
+    document.getElementById('btn-volver').addEventListener('click', () => {
+        document.getElementById('btn-descubre').click();
+    });
+
+    document.getElementById('btn-crea').addEventListener('click', (e) => {
+        document.querySelectorAll('.aero-nav button').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        cambiarPantalla('escribir');
+    });
+
+    document.getElementById('btn-bot').addEventListener('click', (e) => {
+        document.querySelectorAll('.aero-nav button').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        cambiarPantalla('bot');
+    });
+
+    // --- ABRIR UNA HISTORIA ---
     function abrirLectura(id) {
         const historia = historiasDb.find(h => h.id === id);
         historiaActivaId = id;
         parrafoActivoIndex = null; 
         carruselIndex = 0; 
 
-        seccionDescubrir.classList.add('hidden-aero');
-        seccionEscribir.classList.add('hidden-aero');
-        seccionBot.classList.add('hidden-aero');
-        seccionLectura.classList.remove('hidden-aero');
+        // Usamos nuestro nuevo sistema para mostrar la lectura
+        cambiarPantalla('lectura');
 
         panelLectura.innerHTML = '';
 
-        // Carrusel inyectado con estilos en línea para respetar el CSS principal
+        // (Aquí sigue el resto de tu código de abrirLectura sin cambios...)
         if (historia.portadas && historia.portadas.length > 0) {
             const carouselHtml = `
                 <div style="position: relative; width: 100%; height: 250px; margin-bottom: 20px; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
@@ -118,7 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         panelLectura.innerHTML += `<h1 class="aero-title-glow" style="text-align:center; font-size: 2rem; margin-bottom: 30px;">${historia.titulo}</h1>`;
 
-        // Generar los párrafos comentables
         const parrafos = historia.texto.split(/\n+/);
         parrafos.forEach((p, index) => {
             if (p.trim() === '') return; 
@@ -127,7 +175,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const numComentarios = historia.comentarios[index].length;
             
             const div = document.createElement('div');
-            // Usamos la clase msg-bot para darle el fondo de cristal a cada párrafo
             div.className = 'msg-bot'; 
             div.style.display = 'flex';
             div.style.justifyContent = 'space-between';
@@ -145,64 +192,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         tituloOpiniones.innerText = 'LECTORES OPINAN ✨';
         panelOpiniones.innerHTML = '<p class="empty-msg">Haz clic en el icono 💬 de un párrafo para ver u opinar.</p>';
-        cajaComentario.classList.add('hidden-aero');
+        cajaComentario.style.display = 'none'; // Usamos display nativo
     }
-
-    // Lógica del Carrusel
-    window.cambiarFoto = (direccion) => {
-        const historia = historiasDb.find(h => h.id === historiaActivaId);
-        const imgElement = document.getElementById('carousel-img-aero');
-        const numPortadas = historia.portadas.length;
-
-        carruselIndex = (carruselIndex + direccion + numPortadas) % numPortadas;
-        imgElement.style.opacity = '0.4'; 
-        setTimeout(() => {
-            imgElement.src = historia.portadas[carruselIndex];
-            imgElement.style.opacity = '1';
-        }, 150);
-    };
-
-    // Lógica de abrir comentarios por párrafo
-    window.abrirComentarios = (idHistoria, indexParrafo) => {
-        historiaActivaId = idHistoria;
-        parrafoActivoIndex = indexParrafo;
-        
-        const historia = historiasDb.find(h => h.id === idHistoria);
-        const comentarios = historia.comentarios[indexParrafo];
-
-        tituloOpiniones.innerText = `PÁRRAFO ${indexParrafo + 1} ✨`;
-        cajaComentario.classList.remove('hidden-aero');
-        panelOpiniones.innerHTML = '';
-
-        if (comentarios.length > 0) {
-            comentarios.forEach(comentario => {
-                panelOpiniones.innerHTML += `
-                    <div class="msg-user">
-                        <span style="color: var(--aqua); font-size: 0.8rem; font-weight: bold;">Lector anónimo</span>
-                        <p style="font-size: 0.9rem; margin-top: 5px;">${comentario}</p>
-                    </div>
-                `;
-            });
-        } else {
-            panelOpiniones.innerHTML = '<p class="empty-msg">Sé el primero en opinar en este párrafo.</p>';
-        }
-    };
-
-    // Enviar nuevo comentario
-    document.getElementById('btn-enviar-comentario').addEventListener('click', () => {
-        const inputCmt = document.getElementById('input-nuevo-comentario');
-        const textoCmt = inputCmt.value.trim();
-
-        if (textoCmt !== '' && historiaActivaId !== null && parrafoActivoIndex !== null) {
-            const historia = historiasDb.find(h => h.id === historiaActivaId);
-            historia.comentarios[parrafoActivoIndex].push(textoCmt);
-            
-            inputCmt.value = '';
-            window.abrirComentarios(historiaActivaId, parrafoActivoIndex);
-            document.getElementById(`contador-${historiaActivaId}-${parrafoActivoIndex}`).innerText = historia.comentarios[parrafoActivoIndex].length;
-        }
-    });
-
     // Navegación: Botones del Header
     document.getElementById('btn-descubre').addEventListener('click', (e) => {
         document.querySelectorAll('.aero-nav button').forEach(b => b.classList.remove('active'));
