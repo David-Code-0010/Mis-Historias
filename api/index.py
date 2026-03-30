@@ -33,8 +33,24 @@ def get_historias():
     try:
         conn = get_db_connection()
         cur = conn.cursor()
+        
+        # 1. Traemos todas las historias
         cur.execute('SELECT * FROM historias ORDER BY id DESC')
         historias = cur.fetchall()
+        
+        # 2. Para cada historia, buscamos sus comentarios y los organizamos
+        for h in historias:
+            cur.execute('SELECT parrafo_idx, contenido FROM comentarios WHERE historia_id = %s ORDER BY id ASC', (h['id'],))
+            coms = cur.fetchall()
+            
+            # Estructuramos los comentarios por índice de párrafo para que el JS los entienda
+            h['comentarios'] = {}
+            for c in coms:
+                idx = str(c['parrafo_idx'])
+                if idx not in h['comentarios']:
+                    h['comentarios'][idx] = []
+                h['comentarios'][idx].append(c['contenido'])
+                
         cur.close()
         return jsonify(historias)
     except Exception as e:
@@ -59,6 +75,25 @@ def publicar():
     finally:
         if conn: conn.close()
 
+# --- NUEVA RUTA PARA GUARDAR COMENTARIOS ---
+
+@app.route('/api/comentar', methods=['POST'])
+def guardar_comentario():
+    data = request.json
+    conn = None
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('INSERT INTO comentarios (historia_id, parrafo_idx, contenido) VALUES (%s, %s, %s)',
+                    (data['historia_id'], data['parrafo_idx'], data['contenido']))
+        conn.commit()
+        cur.close()
+        return jsonify({"status": "success"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        if conn: conn.close()
+
 # --- RUTA DEL BOT (CEREBRO COLECTIVO) ---
 
 @app.route('/api/chat', methods=['POST'])
@@ -67,7 +102,7 @@ def chat_bot():
     user_message = data.get('msg', '')
 
     try:
-        # MOVIDO AQUÍ ADENTRO: Solo intentamos conectar a OpenAI si el usuario usa el chat
+        # Solo intentamos conectar a OpenAI si el usuario usa el chat
         client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
         
         response = client.chat.completions.create(
