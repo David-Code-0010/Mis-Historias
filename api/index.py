@@ -9,9 +9,6 @@ import vercel_blob
 app = Flask(__name__)
 CORS(app) # Vital para que el navegador no bloquee la conexión
 
-# Configuración de OpenAI (Asegúrate de tener OPENAI_API_KEY en Vercel)
-client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
-
 def get_db_connection():
     # Buscamos primero la nueva llave generada por la integración de Neon
     db_url = os.environ.get('DATABASE_URL_UNPOOLED') or os.environ.get('DATABASE_URL')
@@ -52,7 +49,6 @@ def publicar():
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        # Insertamos título, autor y texto. Las fotos se guardan como array/texto.
         cur.execute('INSERT INTO historias (titulo, autor, texto, fotos) VALUES (%s, %s, %s, %s)',
                     (data['titulo'], data['autor'], data['texto'], data.get('fotos', [])))
         conn.commit()
@@ -71,6 +67,9 @@ def chat_bot():
     user_message = data.get('msg', '')
 
     try:
+        # MOVIDO AQUÍ ADENTRO: Solo intentamos conectar a OpenAI si el usuario usa el chat
+        client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+        
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
@@ -94,7 +93,6 @@ def upload_file():
         return 'No selected file', 400
     
     try:
-        # Sube la imagen a Vercel Blob y devuelve la URL
         blob = vercel_blob.put(file.filename, file.read())
         return jsonify({"url": blob['url']})
     except Exception as e:
