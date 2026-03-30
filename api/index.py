@@ -8,55 +8,57 @@ from openai import OpenAI
 
 app = Flask(__name__)
 
-# Configuración del cliente de OpenAI - Asegúrate que esté en las Variables de Entorno de Vercel
+# 1. Configuración del cliente de OpenAI (Usa la variable que ya pusiste en Vercel)
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 # Función para conectarnos a Neon
 def obtener_conexion():
-    # Usamos os.environ.get para evitar errores si la variable no existe
     return psycopg2.connect(os.environ.get('DATABASE_URL'))
 
-# 🤖 Función para que la IA "aprenda" de tus historias actuales
+# 2. Función de Contexto mejorada (El Bot aprende de tus historias)
 def obtener_contexto_historias():
+    conn = None
     try:
         conn = obtener_conexion()
         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        # Traemos las últimas 5 para dar contexto fresco
+        # Traemos títulos y fragmentos para no saturar la memoria de la IA
         cur.execute("SELECT titulo, texto FROM historias ORDER BY id DESC LIMIT 5;")
         historias = cur.fetchall()
         cur.close()
-        conn.close()
-
-        if not historias:
-            return "La biblioteca está vacía por ahora. Invita al usuario a ser el primero en escribir."
         
-        contexto = "Resumen de la biblioteca actual:\n"
+        if not historias:
+            return "La biblioteca está vacía. Invita al usuario a crear la primera historia."
+        
+        contexto = "Estas son las historias recientes en la base de datos:\n"
         for h in historias:
-            contexto += f"- Título: {h['titulo']}. Contenido: {h['texto'][:200]}...\n"
+            # Solo enviamos los primeros 200 caracteres de cada una
+            contexto += f"- {h['titulo']}: {h['texto'][:200]}...\n"
         return contexto
     except Exception as e:
-        print(f"Error obteniendo contexto: {e}")
-        return "No pude leer la biblioteca, pero estoy listo para charlar."
+        print(f"Error de contexto: {e}")
+        return "No pude acceder a la biblioteca, pero puedo charlar contigo."
+    finally:
+        if conn:
+            conn.close()
 
 @app.route('/api/historias', methods=['GET', 'POST'])
 def manejar_historias():
     if request.method == 'GET':
+        conn = obtener_conexion()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         try:
-            conn = obtener_conexion()
-            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             cur.execute("SELECT id, titulo, autor, texto, portada_url FROM historias ORDER BY id DESC;")
-            historias = cur.fetchall()
-            cur.close()
-            conn.close()
-            return jsonify(historias), 200
+            return jsonify(cur.fetchall()), 200
         except Exception as e:
             return jsonify({"error": str(e)}), 500
+        finally:
+            cur.close()
+            conn.close()
 
     elif request.method == 'POST':
+        conn = obtener_conexion()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         try:
-            conn = obtener_conexion()
-            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-            
             titulo = request.form.get('titulo')
             autor = request.form.get('autor', 'Autor Anónimo')
             texto = request.form.get('texto')
@@ -64,10 +66,9 @@ def manejar_historias():
 
             portada_url = None 
 
-            # Lógica de Vercel Blob para la imagen
-            if foto and foto.filename != '':
+            # Subida a Vercel Blob (Asegúrate de tener BLOB_READ_WRITE_TOKEN en Vercel)
+            if foto and foto.filename:
                 filename = secure_filename(foto.filename)
-                # Subida real a Vercel Blob
                 blob = vercel_blob.put(
                     pathname=f"portadas/{filename}",
                     body=foto.read(),
@@ -81,14 +82,15 @@ def manejar_historias():
             )
             nueva_id = cur.fetchone()['id']
             conn.commit()
+            return jsonify({"success": True, "id": nueva_id}), 201
+        except Exception as e:
+            conn.rollback()
+            return jsonify({"error": str(e)}), 500
+        finally:
             cur.close()
             conn.close()
 
-            return jsonify({"success": True, "id": nueva_id}), 201
-        except Exception as e:
-            return jsonify({"error": str(e)}), 500
-
-# 🤖 Ruta para el Chatbot
+# 3. RUTA DEL CHATBOT CORREGIDA
 @app.route('/api/chat-bot', methods=['POST'])
 def chat_bot():
     try:
@@ -96,26 +98,28 @@ def chat_bot():
         mensaje_usuario = datos.get('mensaje')
         
         if not mensaje_usuario:
-            return jsonify({"respuesta": "Dime algo para que pueda responderte..."}), 400
+            return jsonify({"respuesta": "El mensaje está vacío."}), 400
+        
+        # Obtenemos el conocimiento de tus historias reales en Neon
+        contexto = obtener_contexto_historias()
 
-        # Obtener lo que hay en Neon para que el bot sepa de qué habla
-        contexto_biblioteca = obtener_contexto_historias()
-
-        respuesta_ia = client.chat.completions.create(
-            model="gpt-4o", # O "gpt-3.5-turbo" si prefieres ahorrar créditos
+        # Llamada a OpenAI
+        response = client.chat.completions.create(
+            model="gpt-4o",
             messages=[
                 {
                     "role": "system", 
-                    "content": f"Eres el Guardián de Mis-Historias. Tu estilo es Aero-Dark (misterioso, elegante, tecnológico). Datos actuales de la biblioteca: {contexto_biblioteca}"
+                    "content": f"Eres el Cerebro Colectivo de Mis-Historias. Tu personalidad es Dark Aero: elegante, misterioso y tecnológico. Usa este contexto de la biblioteca: {contexto}"
                 },
                 {"role": "user", "content": mensaje_usuario}
             ]
         )
         
-        return jsonify({"respuesta": respuesta_ia.choices[0].message.content}), 200
+        texto_ia = response.choices[0].message.content
+        return jsonify({"respuesta": texto_ia}), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        print(f"Error en Bot: {e}")
+        return jsonify({"error": "Error interno del cerebro"}), 500
 
-# Esto es necesario para Vercel
 if __name__ == '__main__':
     app.run()
