@@ -1,97 +1,75 @@
-/* CONFIGURACIÓN DARK AERO - ZERO MINIMALISM */
+/* DARK AERO INDUSTRIAL - ZERO MINIMALISM */
 :root {
-  --bg-black: #000000;
-  --panel-dark: #0a0a0a;
-  --aero-aqua: #00ccff;
-  --aero-aqua-glow: rgba(0, 204, 255, 0.4);
-  --brand-orange: #ff6600;
-  --brand-orange-depth: #993300;
-  --border-metal: #222;
-  --text-main: #e0e0e0;
+  --neon-cyan: #00ccff;
+  --neon-orange: #ff6600;
+  --deep-black: #000000;
+  --metal-grey: #1a1a1a;
+  --panel-shadow: inset 0 5px 15px rgba(0,0,0,1), 0 1px 0 rgba(255,255,255,0.05);
 }
 
-/* Fondo con rejilla técnica */
+/* Fondo con rejilla de ingeniería */
 body {
-  background: var(--bg-black);
+  background: var(--deep-black);
   background-image: 
-    linear-gradient(rgba(0, 204, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 204, 255, 0.05) 1px, transparent 1px);
-  background-size: 30px 30px;
-  color: var(--text-main);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
+    linear-gradient(rgba(0, 204, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 204, 255, 0.03) 1px, transparent 1px);
+  background-size: 25px 25px;
+  color: #eee;
+  font-family: 'Courier New', Courier, monospace;
 }
 
-/* CONTENEDOR DE ESCRITURA - IMPACTO TOTAL */
-.glassy-box {
-  background: linear-gradient(145deg, #111, #050505);
-  border: 2px solid var(--border-metal);
-  border-radius: 15px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.9), inset 0 1px 1px rgba(255,255,255,0.05);
-  padding: 35px;
-  margin-bottom: 40px;
-}
-
-/* INPUTS CON PROFUNDIDAD (SKEUO) */
+/* CAJAS DE TEXTO "HUNDIDAS" EN EL PANEL */
 .formulario-aero input[type="text"], 
 .formulario-aero textarea {
   width: 100%;
-  background: #000;
-  border: 1px solid #333;
-  border-top: 3px solid #000; /* Sombra superior para profundidad */
-  border-left: 2px solid #000;
-  border-radius: 10px;
-  color: var(--aero-aqua);
+  background: #050505 !important;
+  border: 2px solid #222 !important;
+  border-top: 4px solid #000 !important; /* Efecto profundidad */
+  border-radius: 12px;
+  color: var(--neon-cyan);
   padding: 20px;
   font-size: 18px;
-  margin-bottom: 25px;
-  /* El secreto del volumen: */
-  box-shadow: inset 0 5px 15px rgba(0,0,0,1), 0 1px 0 rgba(255,255,255,0.05);
-  transition: all 0.2s;
+  margin-bottom: 30px;
+  box-shadow: var(--panel-shadow);
+  transition: all 0.2s ease-in-out;
 }
 
-.formulario-aero textarea:focus {
-  outline: none;
-  border-color: var(--aero-aqua);
-  box-shadow: inset 0 5px 15px rgba(0,0,0,1), 0 0 20px var(--aero-aqua-glow);
-}
-
-/* EL ÁREA DE ESCRITURA MASIVA */
+/* ÁREA DE ESCRITURA MASIVA Y RESPONSIVE */
 .formulario-aero textarea {
-  min-height: 550px; /* Tamaño enorme para empezar */
-  line-height: 1.8;
-  resize: vertical; /* Scroll infinito si escribes mucho */
+  min-height: 600px; /* Tamaño por defecto gigante */
+  line-height: 1.7;
+  resize: vertical; /* Permite scroll y expansión */
 }
 
-/* BOTÓN "PUBLICAR" CON VOLUMEN DE HARDWARE */
+/* BOTÓN DE HARDWARE (Pesa visualmente) */
 .btn-aero-submit {
-  background: linear-gradient(180deg, #ff8800 0%, #ff6600 50%, #cc5500 100%);
+  background: linear-gradient(180deg, #ff8800 0%, #ff4400 100%);
   color: white;
   padding: 25px;
   border: 1px solid #ff9900;
-  border-bottom: 8px solid var(--brand-orange-depth); /* Grosor para parecer botón físico */
-  border-radius: 12px;
-  font-size: 20px;
+  border-bottom: 10px solid #882200; /* Grosor real de botón físico */
+  border-radius: 15px;
+  font-size: 22px;
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 3px;
+  letter-spacing: 2px;
   cursor: pointer;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.7);
   width: 100%;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
 .btn-aero-submit:active {
   transform: translateY(4px);
-  border-bottom-width: 2px;
+  border-bottom-width: 4px;
 }
 
-/* RESPONSIVE PARA MÓVIL */
+/* MÓVIL: MÁXIMO ESPACIO PARA ESCRIBIR */
 @media (max-width: 768px) {
-  .glassy-box { padding: 20px; border-radius: 0; }
   .formulario-aero textarea {
-    min-height: 70vh; /* En móvil ocupa casi toda la pantalla para que no moleste */
+    min-height: 80vh; /* Ocupa el 80% de la pantalla para que escribas cómodo */
     font-size: 16px;
+    padding: 15px;
   }
-  .btn-aero-submit { font-size: 16px; padding: 20px; }
+  .glassy-box { padding: 15px; border-radius: 0; }
+  .btn-aero-submit { font-size: 18px; padding: 20px; }
 }
