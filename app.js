@@ -19,16 +19,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const seccionLectura = document.getElementById('seccion-lectura');
     const seccionEscribir = document.getElementById('seccion-escribir');
     const seccionBot = document.getElementById('seccion-bot');
+    const seccionAuth = document.getElementById('seccion-auth'); // ¡NUEVO! Referencia al Login
 
     // ==========================================
     // SISTEMA DE NAVEGACIÓN
     // ==========================================
     function cambiarPantalla(pantalla) {
+        // Ocultamos todas las pantallas primero
         if(seccionDescubrir) seccionDescubrir.style.display = 'none';
         if(seccionLectura) seccionLectura.style.display = 'none';
         if(seccionEscribir) seccionEscribir.style.display = 'none';
         if(seccionBot) seccionBot.style.display = 'none';
+        if(seccionAuth) seccionAuth.style.display = 'none'; // ¡NUEVO! Ocultar Login
 
+        // Mostramos solo la que necesitamos
         if (pantalla === 'descubrir') {
             seccionDescubrir.style.display = 'block';
             cargarHistorias();
@@ -38,6 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
             seccionEscribir.style.display = 'block';
         } else if (pantalla === 'bot') {
             seccionBot.style.display = 'block';
+        } else if (pantalla === 'auth') {
+            seccionAuth.style.display = 'block'; // ¡NUEVO! Mostrar Login
         }
     }
 
@@ -45,16 +51,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnCrea = document.getElementById('btn-crea');
     const btnBot = document.getElementById('btn-bot');
     const btnVolver = document.getElementById('btn-volver');
+    const btnAuthNav = document.getElementById('btn-auth-nav'); // ¡NUEVO! Botón del menú
 
     function actualizarNav(botonActivo) {
         document.querySelectorAll('.aero-nav button').forEach(b => b.classList.remove('active'));
         if(botonActivo) botonActivo.classList.add('active');
     }
 
+    // Eventos de los botones del menú superior
     if(btnDescubre) btnDescubre.addEventListener('click', (e) => { actualizarNav(e.target); cambiarPantalla('descubrir'); });
     if(btnCrea) btnCrea.addEventListener('click', (e) => { actualizarNav(e.target); cambiarPantalla('escribir'); });
     if(btnBot) btnBot.addEventListener('click', (e) => { actualizarNav(e.target); cambiarPantalla('bot'); });
     if(btnVolver) btnVolver.addEventListener('click', () => { if(btnDescubre) btnDescubre.click(); });
+    // ¡NUEVO! Evento para abrir el Login
+    if(btnAuthNav) btnAuthNav.addEventListener('click', (e) => { actualizarNav(e.target); cambiarPantalla('auth'); });
 
     // ==========================================
     // BASE DE DATOS: CARGAR HISTORIAS (NEON)
@@ -275,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
-    // PUBLICAR NUEVA HISTORIA (SOPORTE MULTIPLE VERCEL BLOB)
+    // PUBLICAR NUEVA HISTORIA
     // ==========================================
     const formHistoria = document.getElementById('formulario-historia');
     
@@ -293,7 +303,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const textoOriginalBoton = btnSubmit.innerText;
 
             try {
-                // 1. SUBIMOS TODAS LAS IMÁGENES A VERCEL BLOB PRIMERO
                 if (inputFotos && inputFotos.files.length > 0) {
                     btnSubmit.innerText = 'Subiendo imágenes a Vercel Blob... ⏳'; 
                     btnSubmit.disabled = true;
@@ -315,11 +324,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     fotos = await Promise.all(promesasSubida);
                 } else {
-                    // Si no hay foto, enviamos un placeholder
                     fotos.push('https://placehold.co/600x300/111/0cf?text=Sin+Portada');
                 }
 
-                // 2. GUARDAMOS TODO EN NEON
                 btnSubmit.innerText = 'Guardando en la Red Neon... 💾';
                 
                 const res = await fetch('/api/publicar', {
@@ -382,7 +389,6 @@ document.addEventListener('DOMContentLoaded', () => {
             chatWindow.scrollTop = chatWindow.scrollHeight;
 
             try {
-                // Llamamos a la API de Flask que conecta con OpenAI
                 const res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -390,10 +396,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 const data = await res.json();
-                document.getElementById(typingId).remove(); // Quitamos el "Cargando..."
+                document.getElementById(typingId).remove();
 
                 if (res.ok) {
-                    // Respuesta del bot
                     chatWindow.innerHTML += `
                         <div style="text-align: left; margin-bottom: 15px;">
                             <span style="background: rgba(255, 255, 255, 0.05); border-left: 3px solid #00CCFF; padding: 10px 15px; border-radius: 8px; color: #ddd; display: inline-block; max-width: 80%; line-height: 1.5;">
@@ -410,63 +415,57 @@ document.addEventListener('DOMContentLoaded', () => {
             chatWindow.scrollTop = chatWindow.scrollHeight;
         }
 
-        // Enviar con botón
         btnEnviarBot.addEventListener('click', enviarMensajeBot);
-
-        // Enviar con tecla Enter
         inputBot.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 enviarMensajeBot();
             }
         });
     }
+
     // ==========================================
-// LÓGICA DE LOGIN / REGISTRO
-// ==========================================
-let isLoginMode = true; // Empezamos en modo Iniciar Sesión
+    // LÓGICA DE LOGIN / REGISTRO
+    // ==========================================
+    let isLoginMode = true; 
 
-const authTitle = document.getElementById('auth-title');
-const authSubmitBtn = document.getElementById('auth-submit-btn');
-const authSwitchText = document.getElementById('auth-switch-text');
-const toggleAuthBtn = document.getElementById('toggle-auth-btn');
-const authForm = document.getElementById('auth-form');
+    const authTitle = document.getElementById('auth-title');
+    const authSubmitBtn = document.getElementById('auth-submit-btn');
+    const authSwitchText = document.getElementById('auth-switch-text');
+    const toggleAuthBtn = document.getElementById('toggle-auth-btn');
+    const authForm = document.getElementById('auth-form');
 
-// Cambiar entre Login y Registro
-toggleAuthBtn.addEventListener('click', () => {
-  isLoginMode = !isLoginMode; // Invertimos el modo
-  
-  if (isLoginMode) {
-    authTitle.textContent = "Iniciar Sesión";
-    authSubmitBtn.textContent = "Entrar";
-    authSwitchText.textContent = "¿No tienes cuenta?";
-    toggleAuthBtn.textContent = "Regístrate aquí";
-  } else {
-    authTitle.textContent = "Crear Cuenta";
-    authSubmitBtn.textContent = "Forjar mi destino (Registrar)";
-    authSwitchText.textContent = "¿Ya tienes una llave?";
-    toggleAuthBtn.textContent = "Inicia sesión";
-  }
-});
+    if(toggleAuthBtn && authForm) {
+        toggleAuthBtn.addEventListener('click', () => {
+            isLoginMode = !isLoginMode; 
+            
+            if (isLoginMode) {
+                authTitle.textContent = "Iniciar Sesión";
+                authSubmitBtn.textContent = "Entrar";
+                authSwitchText.textContent = "¿No tienes cuenta?";
+                toggleAuthBtn.textContent = "Regístrate aquí";
+            } else {
+                authTitle.textContent = "Crear Cuenta";
+                authSubmitBtn.textContent = "Forjar mi destino (Registrar)";
+                authSwitchText.textContent = "¿Ya tienes una llave?";
+                toggleAuthBtn.textContent = "Inicia sesión";
+            }
+        });
 
-// Capturar los datos cuando el usuario le da a "Entrar" o "Registrar"
-authForm.addEventListener('submit', (e) => {
-  e.preventDefault(); // Evitamos que la página se recargue
-  
-  const username = document.getElementById('username-input').value.trim();
-  const password = document.getElementById('password-input').value.trim();
-  
-  if (!username || !password) {
-    alert("Ey, no dejes campos vacíos xd");
-    return;
-  }
+        authForm.addEventListener('submit', (e) => {
+            e.preventDefault(); 
+            
+            const username = document.getElementById('username-input').value.trim();
+            const password = document.getElementById('password-input').value.trim();
+            
+            if (!username || !password) {
+                alert("Ey, no dejes campos vacíos xd");
+                return;
+            }
 
-  console.log(`Preparando para enviar al servidor en modo: ${isLoginMode ? 'LOGIN' : 'REGISTRO'}`);
-  console.log("Usuario:", username);
-  console.log("Contraseña:", password); // Shh, es un secreto
-
-  // ¡AQUÍ ES DONDE CONECTAREMOS CON EL BACKEND EN EL SIGUIENTE PASO!
-  alert(`¡Atrapamos los datos del Frontend!\nModo: ${isLoginMode ? 'Login' : 'Registro'}\nUsuario: ${username}\n\nListos para mandar al servidor.`);
-});
+            // Aquí probamos que todo funcione antes de ir al Backend
+            alert(`¡Atrapamos los datos del Frontend!\nModo: ${isLoginMode ? 'Login' : 'Registro'}\nUsuario: ${username}\n\nListos para mandar al servidor.`);
+        });
+    }
 
     // ==========================================
     // INICIO DE LA APLICACIÓN
