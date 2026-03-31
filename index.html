@@ -90,6 +90,38 @@
         </section>
     </main>
 
+    <div id="auth-container" class="flex-container" style="justify-content: center; margin-top: 40px;">
+  <div class="glassy-box" style="width: 100%; max-width: 400px; padding: 30px;">
+    
+    <h2 id="auth-title" class="aero-title-glow" style="text-align: center; font-size: 1.8rem;">Iniciar Sesión</h2>
+    <p class="genre-title" style="text-align: center; margin-bottom: 24px;">ACCESO AL PORTAL</p>
+    
+    <form id="auth-form" class="formulario-aero" style="display: flex; flex-direction: column; gap: 18px;">
+      
+      <div>
+        <label class="genre-title" style="display: block; margin-bottom: 8px;">USUARIO</label>
+        <input type="text" id="username-input" placeholder="Tu alias de escritor..." required autocomplete="off">
+      </div>
+      
+      <div>
+        <label class="genre-title" style="display: block; margin-bottom: 8px;">CONTRASEÑA</label>
+        <input type="password" id="password-input" placeholder="••••••••" required>
+      </div>
+
+      <button type="submit" id="auth-submit-btn" class="btn-aero-submit" style="width: 100%; margin-top: 10px;">
+        Entrar
+      </button>
+    </form>
+
+    <div style="text-align: center; margin-top: 24px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
+      <span style="color: var(--text-dim); font-size: 0.9rem;" id="auth-switch-text">¿No tienes cuenta?</span>
+      <button id="toggle-auth-btn" class="btn-aero-text" style="background: transparent; box-shadow: none; border: none; color: var(--aqua); padding: 0 5px;">
+        Regístrate aquí
+      </button>
+    </div>
+
+  </div>
+</div>
     <script src="./app.js"></script>
 </body>
 </html>
