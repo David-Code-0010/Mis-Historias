@@ -420,6 +420,53 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+    // ==========================================
+// LÓGICA DE LOGIN / REGISTRO
+// ==========================================
+let isLoginMode = true; // Empezamos en modo Iniciar Sesión
+
+const authTitle = document.getElementById('auth-title');
+const authSubmitBtn = document.getElementById('auth-submit-btn');
+const authSwitchText = document.getElementById('auth-switch-text');
+const toggleAuthBtn = document.getElementById('toggle-auth-btn');
+const authForm = document.getElementById('auth-form');
+
+// Cambiar entre Login y Registro
+toggleAuthBtn.addEventListener('click', () => {
+  isLoginMode = !isLoginMode; // Invertimos el modo
+  
+  if (isLoginMode) {
+    authTitle.textContent = "Iniciar Sesión";
+    authSubmitBtn.textContent = "Entrar";
+    authSwitchText.textContent = "¿No tienes cuenta?";
+    toggleAuthBtn.textContent = "Regístrate aquí";
+  } else {
+    authTitle.textContent = "Crear Cuenta";
+    authSubmitBtn.textContent = "Forjar mi destino (Registrar)";
+    authSwitchText.textContent = "¿Ya tienes una llave?";
+    toggleAuthBtn.textContent = "Inicia sesión";
+  }
+});
+
+// Capturar los datos cuando el usuario le da a "Entrar" o "Registrar"
+authForm.addEventListener('submit', (e) => {
+  e.preventDefault(); // Evitamos que la página se recargue
+  
+  const username = document.getElementById('username-input').value.trim();
+  const password = document.getElementById('password-input').value.trim();
+  
+  if (!username || !password) {
+    alert("Ey, no dejes campos vacíos xd");
+    return;
+  }
+
+  console.log(`Preparando para enviar al servidor en modo: ${isLoginMode ? 'LOGIN' : 'REGISTRO'}`);
+  console.log("Usuario:", username);
+  console.log("Contraseña:", password); // Shh, es un secreto
+
+  // ¡AQUÍ ES DONDE CONECTAREMOS CON EL BACKEND EN EL SIGUIENTE PASO!
+  alert(`¡Atrapamos los datos del Frontend!\nModo: ${isLoginMode ? 'Login' : 'Registro'}\nUsuario: ${username}\n\nListos para mandar al servidor.`);
+});
 
     // ==========================================
     // INICIO DE LA APLICACIÓN
