@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         gridDescubrir.innerHTML = '';
         
         if (historiasDb.length === 0) {
-            gridDescubrir.innerHTML = '<p style="color:#aaa;">No hay historias todavía. ¡Ve a Escribir y crea la primera!</p>';
+            gridDescubrir.innerHTML = '<p style="color:#aaa; text-align:center; width:100%;">No hay historias todavía. ¡Ve a Escribir y crea la primera!</p>';
             return;
         }
 
@@ -86,9 +86,10 @@ document.addEventListener('DOMContentLoaded', () => {
             art.style.cursor = 'pointer';
             art.onclick = () => window.abrirLectura(h.id);
             
-            let miniatura = 'https://via.placeholder.com/600x300/111/0cf?text=Sin+Portada';
+            // Imagen por defecto funcional
+            let miniatura = 'https://placehold.co/600x300/111/0cf?text=Sin+Portada';
             
-            // FILTRO DE COMILLAS APLICADO AQUÍ
+            // Filtro para limpiar comillas o caracteres raros de la base de datos
             if (h.fotos) {
                 if (Array.isArray(h.fotos) && h.fotos.length > 0) {
                     miniatura = h.fotos[0].replace(/['"]/g, '');
@@ -130,8 +131,8 @@ document.addEventListener('DOMContentLoaded', () => {
         cambiarPantalla('lectura');
         panelLectura.innerHTML = '';
 
-        // Preparar arreglo de fotos y LIMPIAR COMILLAS
-        fotosActuales = ['https://via.placeholder.com/600x300/111/0cf?text=Sin+Portada'];
+        // Preparar arreglo de fotos
+        fotosActuales = ['https://placehold.co/600x300/111/0cf?text=Sin+Portada'];
         if (historia.fotos) {
             if (Array.isArray(historia.fotos) && historia.fotos.length > 0) {
                 fotosActuales = historia.fotos.map(u => typeof u === 'string' ? u.replace(/['"]/g, '') : u);
@@ -142,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Crear flechas si hay más de 1 foto
+        // Crear flechas del carrusel si hay más de 1 foto
         let flechas = '';
         if (fotosActuales.length > 1) {
              flechas = `
@@ -221,12 +222,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.enviarComentario = async function() {
-        const inputComentario = document.querySelector('#caja-escribir-comentario input') || document.getElementById('nuevo-comentario');
+        const inputComentario = document.querySelector('#caja-escribir-comentario input') || document.getElementById('input-nuevo-comentario');
         
-        if(!inputComentario) {
-            console.error("No se detecta la caja de texto en el HTML.");
-            return;
-        }
+        if(!inputComentario) return;
 
         const texto = inputComentario.value.trim();
         if (!texto) return;
@@ -247,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!historia.comentarios[parrafoActivoIndex]) historia.comentarios[parrafoActivoIndex] = [];
                 
                 historia.comentarios[parrafoActivoIndex].push(texto);
-                inputComentario.value = ''; // Limpiamos la caja
+                inputComentario.value = ''; 
                 actualizarListaComentarios(historia, parrafoActivoIndex);
                 
                 const contador = document.getElementById(`contador-${historiaActivaId}-${parrafoActivoIndex}`);
@@ -261,29 +259,69 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     document.addEventListener('click', (e) => {
-        if (e.target.closest('#caja-escribir-comentario button')) {
+        if (e.target.closest('#btn-enviar-comentario')) {
             window.enviarComentario();
         }
     });
 
+    // Permitir enviar comentario con la tecla Enter
+    const inputNuevoComentario = document.getElementById('input-nuevo-comentario');
+    if (inputNuevoComentario) {
+        inputNuevoComentario.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                window.enviarComentario();
+            }
+        });
+    }
+
     // ==========================================
-    // PUBLICAR NUEVA HISTORIA
+    // PUBLICAR NUEVA HISTORIA (SOPORTE MULTIPLE VERCEL BLOB)
     // ==========================================
     const formHistoria = document.getElementById('formulario-historia');
+    
     if (formHistoria) {
         formHistoria.addEventListener('submit', async (e) => {
             e.preventDefault();
+            
             const titulo = document.getElementById('titulo-historia').value;
             const autor = document.getElementById('autor-historia').value || 'Anónimo';
             const texto = document.getElementById('contenido-historia').value;
+            const inputFotos = document.getElementById('fotos-historia'); 
             
-            // Si el usuario no sube fotos, pasamos estas por defecto para que las flechas tengan algo que mostrar
-            const fotos = [
-                'https://via.placeholder.com/600x300/111/0cf?text=Portada+Principal',
-                'https://via.placeholder.com/600x300/222/f0c?text=Imagen+Adicional+1'
-            ];
+            let fotos = []; 
+            const btnSubmit = formHistoria.querySelector('button[type="submit"]');
+            const textoOriginalBoton = btnSubmit.innerText;
 
             try {
+                // 1. SUBIMOS TODAS LAS IMÁGENES A VERCEL BLOB PRIMERO
+                if (inputFotos && inputFotos.files.length > 0) {
+                    btnSubmit.innerText = 'Subiendo imágenes a Vercel Blob... ⏳'; 
+                    btnSubmit.disabled = true;
+
+                    const promesasSubida = Array.from(inputFotos.files).map(async (file) => {
+                        const formData = new FormData();
+                        formData.append('file', file);
+
+                        const uploadRes = await fetch('/api/upload', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        if (!uploadRes.ok) throw new Error(`Error al subir ${file.name}`);
+                        
+                        const uploadData = await uploadRes.json();
+                        return uploadData.url; 
+                    });
+
+                    fotos = await Promise.all(promesasSubida);
+                } else {
+                    // Si no hay foto, enviamos un placeholder
+                    fotos.push('https://placehold.co/600x300/111/0cf?text=Sin+Portada');
+                }
+
+                // 2. GUARDAMOS TODO EN NEON
+                btnSubmit.innerText = 'Guardando en la Red Neon... 💾';
+                
                 const res = await fetch('/api/publicar', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -292,12 +330,93 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (res.ok) {
                     formHistoria.reset();
-                    if(btnDescubre) btnDescubre.click();
+                    
+                    const previewFotos = document.getElementById('preview-fotos');
+                    if (previewFotos) previewFotos.innerHTML = '';
+
+                    const btnDescubre = document.getElementById('btn-descubre');
+                    if(btnDescubre) btnDescubre.click(); 
                 } else {
-                    alert('Error al publicar la historia.');
+                    alert('Error al publicar la historia en la base de datos Neon.');
                 }
             } catch (error) {
                 console.error("Error publicando:", error);
+                alert("Hubo un problema al subir las imágenes o publicar la historia.");
+            } finally {
+                btnSubmit.innerText = textoOriginalBoton;
+                btnSubmit.disabled = false;
+            }
+        });
+    }
+
+    // ==========================================
+    // CEREBRO COLECTIVO (BOT DE OPENAI)
+    // ==========================================
+    const btnEnviarBot = document.getElementById('btn-enviar-bot');
+    const inputBot = document.getElementById('input-bot');
+    const chatWindow = document.getElementById('chat-window');
+
+    if (btnEnviarBot && inputBot && chatWindow) {
+        async function enviarMensajeBot() {
+            const msg = inputBot.value.trim();
+            if (!msg) return;
+
+            // Burbuja del usuario
+            chatWindow.innerHTML += `
+                <div style="text-align: right; margin-bottom: 15px;">
+                    <span style="background: rgba(0, 204, 255, 0.2); border: 1px solid rgba(0, 204, 255, 0.4); padding: 10px 15px; border-radius: 12px; color: white; display: inline-block; max-width: 80%;">
+                        ${msg}
+                    </span>
+                </div>`;
+            inputBot.value = '';
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            // Burbuja de "Cargando..."
+            const typingId = 'typing-' + Date.now();
+            chatWindow.innerHTML += `
+                <div id="${typingId}" style="text-align: left; margin-bottom: 15px;">
+                    <span style="background: rgba(255, 255, 255, 0.05); border-left: 3px solid #00CCFF; padding: 10px 15px; border-radius: 8px; color: #00CCFF; display: inline-block;">
+                        Conectando con la red neuronal... ⏳
+                    </span>
+                </div>`;
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            try {
+                // Llamamos a la API de Flask que conecta con OpenAI
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ msg })
+                });
+
+                const data = await res.json();
+                document.getElementById(typingId).remove(); // Quitamos el "Cargando..."
+
+                if (res.ok) {
+                    // Respuesta del bot
+                    chatWindow.innerHTML += `
+                        <div style="text-align: left; margin-bottom: 15px;">
+                            <span style="background: rgba(255, 255, 255, 0.05); border-left: 3px solid #00CCFF; padding: 10px 15px; border-radius: 8px; color: #ddd; display: inline-block; max-width: 80%; line-height: 1.5;">
+                                ${data.reply}
+                            </span>
+                        </div>`;
+                } else {
+                    chatWindow.innerHTML += `<div style="text-align: left; margin-bottom: 15px;"><span style="color: #ff4444;">Error: ${data.reply}</span></div>`;
+                }
+            } catch (error) {
+                document.getElementById(typingId).remove();
+                chatWindow.innerHTML += `<div style="text-align: left; margin-bottom: 15px;"><span style="color: #ff4444;">Fallo de conexión en el servidor del bot.</span></div>`;
+            }
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        // Enviar con botón
+        btnEnviarBot.addEventListener('click', enviarMensajeBot);
+
+        // Enviar con tecla Enter
+        inputBot.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                enviarMensajeBot();
             }
         });
     }
