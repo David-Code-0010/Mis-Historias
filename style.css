@@ -1,233 +1,69 @@
-/* Dark Aero (Mata Nero / Frutiger Ego) */
-/* Glass + skeuomorphic depth, colores muy oscuros con acentos neon sutiles */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
-
-:root{
-  --bg-900: #050506;             
-  --bg-850: #0a0a0b;
-  --panel-glass: rgba(255,255,255,0.02);
-  --panel-glass-2: rgba(255,255,255,0.03);
-  --aqua: #00ffd8;               
-  --aqua-dim: rgba(0,255,216,0.10);
-  --green-accent: #08e07a;       
-  --muted: #949aa0;
-  --text: #e9eef2;
-  --text-dim: #aeb6bb;
-  --specular: rgba(255,255,255,0.06);
-  --inner-shadow: rgba(0,0,0,0.6);
-  --radius-lg: 16px;
-  --radius-md: 10px;
-  --radius-sm: 8px;
+:root {
+    --aqua: #00CCFF;
+    --bg-dark: #050505;
+    --glass: rgba(255, 255, 255, 0.05);
+    --text-dim: #aaa;
 }
 
-/* Reset / base */
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  min-height:100vh;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background:
-    radial-gradient(800px 360px at 12% 12%, rgba(0,0,0,0.35), transparent 18%),
-    radial-gradient(700px 300px at 88% 84%, rgba(8,224,122,0.02), transparent 18%),
-    var(--bg-900);
-  color:var(--text);
-  -webkit-font-smoothing:antialiased;
-  padding:28px 0 60px;
-  position:relative;
+body {
+    background-color: var(--bg-dark);
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
 }
 
-/* Fondo burbujas/cristal */
-.bubbles-overlay{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  background-image:
-    radial-gradient(circle at 15% 20%, rgba(255,255,255,0.02) 0 6%, transparent 35%),
-    radial-gradient(circle at 80% 30%, rgba(0,0,0,0.6) 0 6%, transparent 32%),
-    linear-gradient(180deg, rgba(255,255,255,0.006), transparent 35%);
-  mix-blend-mode: overlay;
-  z-index:0;
-  opacity:0.95;
+/* Fix para la navegación que se ve amontonada */
+.aero-nav {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 20px;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
-.container{
-  width: min(1180px, 94%);
-  margin: 0 auto;
-  position:relative;
-  z-index:1;
+.aero-nav button {
+    background: var(--glass);
+    border: 1px solid var(--aqua);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
-.flex-container{ display:flex; gap:20px; align-items:flex-start; }
-
-/* Panel Modal */
-.glassy-box{
-  position:relative;
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.20));
-  border-radius: var(--radius-lg);
-  border: 1px solid rgba(255,255,255,0.02);
-  box-shadow:
-    0 20px 50px rgba(0,0,0,0.75),
-    inset 0 2px 0 rgba(255,255,255,0.02),
-    inset 0 -8px 30px rgba(0,0,0,0.5);
-  backdrop-filter: blur(12px) saturate(120%);
-  overflow:hidden;
+.aero-nav button.active {
+    background: var(--aqua);
+    color: black;
+    box-shadow: 0 0 15px var(--aqua);
 }
 
-.glassy-box::before{
-  content:"";
-  position:absolute;
-  left:-30%;
-  top:-40%;
-  width:160%;
-  height:60%;
-  transform: rotate(-18deg);
-  background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.00) 35%, rgba(255,255,255,0.00));
-  filter: blur(18px);
-  opacity:0.28;
-  pointer-events:none;
+/* El contenedor principal para que nada se pierda en el negro */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-/* Tipografía */
-.genre-title{
-  color:var(--text-dim);
-  font-size:0.82rem;
-  letter-spacing:0.12em;
-  margin:0 0 12px 0;
-}
-.aero-title-glow{
-  color:var(--text);
-  font-weight:700;
-  margin:0 0 12px 0;
-  text-shadow: 0 14px 44px rgba(0,0,0,0.65);
+/* Estilo de las cajas de cristal */
+.glassy-box {
+    background: var(--glass);
+    border: 1px solid rgba(0, 204, 255, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
 }
 
-/* Botones */
-.btn-aero-submit{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  background: linear-gradient(90deg, rgba(0,255,216,0.06), rgba(8,224,122,0.04));
-  color:var(--text);
-  border:1px solid rgba(0,255,216,0.10);
-  border-radius:12px;
-  font-weight:800;
-  letter-spacing:0.06em;
-  cursor:pointer;
-  box-shadow: 0 18px 50px rgba(0,0,0,0.72), 0 0 30px rgba(0,255,216,0.04);
-  transition: transform .12s ease, box-shadow .12s ease;
-}
-.btn-aero-submit:hover{ 
-  transform: translateY(-4px); 
-  box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 60px rgba(0,255,216,0.06); 
+.aero-title-glow {
+    text-shadow: 0 0 10px var(--aqua);
+    text-align: center;
+    margin-bottom: 30px;
 }
 
-/* ========================================== */
-/* AVATAR INTERACTIVO */
-/* ========================================== */
-.avatar-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 24px;
-  margin-top: -10px;
-}
-
-.avatar-label {
-  display: block;
-  cursor: pointer;
-  position: relative;
-  border-radius: 50%; /* Evita que el hover se salga del círculo */
-}
-
-.avatar-aero {
-  width: 84px;
-  height: 84px;
-  border-radius: 50%;
-  object-fit: cover;
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.20));
-  border: 2px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 
-    0 10px 25px rgba(0,0,0,0.8), 
-    0 0 15px rgba(0, 255, 216, 0.10),
-    inset 0 2px 4px rgba(255, 255, 255, 0.05);
-  transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
-}
-
-.avatar-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  border-radius: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: var(--aqua);
-  font-weight: bold;
-  font-size: 0.8rem;
-  opacity: 0;
-  transition: opacity 0.2s;
-  pointer-events: none;
-}
-
-.avatar-label:hover .avatar-aero {
-  transform: translateY(-4px) scale(1.05);
-  border-color: rgba(0, 255, 216, 0.4);
-  box-shadow: 
-    0 15px 35px rgba(0,0,0,0.9), 
-    0 0 30px rgba(0, 255, 216, 0.25),
-    inset 0 2px 4px rgba(255, 255, 255, 0.1);
-}
-
-.avatar-label:hover .avatar-overlay {
-  opacity: 1;
-  transform: translateY(-4px) scale(1.05); /* Sincronizado con la imagen */
-}
-
-.hidden-file-input {
-  display: none;
-}
-
-/* ========================================== */
-/* INPUTS DEL FORMULARIO */
-/* ========================================== */
-.formulario-aero input[type="text"],
-.formulario-aero input[type="password"]{
-  width:100%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(0,0,0,0.20));
-  border:1px solid rgba(255,255,255,0.02);
-  color:var(--text);
-  padding:12px 14px;
-  border-radius:10px;
-  outline:none;
-  transition: box-shadow .12s ease, border-color .12s ease, transform .12s;
-  font-size:0.95rem;
-  box-shadow: inset 0 6px 14px rgba(0,0,0,0.6);
-}
-
-.formulario-aero input::placeholder{ 
-  color: rgba(174,183,189,0.28); 
-  font-weight:600; 
-  letter-spacing:0.01em; 
-}
-
-.formulario-aero input[type="text"]:focus,
-.formulario-aero input[type="password"]:focus{
-  border-color: rgba(0,255,216,0.16);
-  box-shadow: 0 10px 34px rgba(0,0,0,0.6), 0 0 20px rgba(0,255,216,0.04), inset 0 1px 0 rgba(255,255,255,0.02);
-  transform: translateY(-2px);
-}
-
-/* Accesibilidad Focus */
-:focus{ outline:none; }
-button:focus, input:focus{
-  box-shadow: 0 0 0 4px rgba(0,255,216,0.06), 0 16px 50px rgba(0,0,0,0.6);
-}
-
-@media (max-width:920px){
-  .flex-container{ flex-direction:column; }
+/* Ocultar secciones por defecto */
+section {
+    display: none;
 }
