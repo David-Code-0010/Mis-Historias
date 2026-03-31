@@ -246,6 +246,40 @@ body{
 }
 .btn-aero-submit:hover{ transform: translateY(-4px); box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 60px rgba(0,255,216,0.06); }
 
+/* Avatar / Profile Picture - Dark Aero */
+.avatar-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+  margin-top: -10px; /* Ajusta esto dependiendo del margen de tu título */
+}
+
+.avatar-aero {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  object-fit: cover;
+  /* Fondo oscuro tipo cristal por si la imagen tarda en cargar o es transparente */
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.20));
+  border: 2px solid rgba(255, 255, 255, 0.05);
+  /* Sombra profunda + resplandor neón súper sutil + bisel interno */
+  box-shadow: 
+    0 10px 25px rgba(0,0,0,0.8), 
+    0 0 15px rgba(0, 255, 216, 0.10),
+    inset 0 2px 4px rgba(255, 255, 255, 0.05);
+  transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+  cursor: pointer;
+}
+
+.avatar-aero:hover {
+  transform: translateY(-4px) scale(1.05);
+  border-color: rgba(0, 255, 216, 0.4);
+  box-shadow: 
+    0 15px 35px rgba(0,0,0,0.9), 
+    0 0 30px rgba(0, 255, 216, 0.25),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+
 /* Inputs / forms — inset bevel to mimic tactile controls */
 .formulario-aero input[type="text"],
 .formulario-aero input[type="password"],
