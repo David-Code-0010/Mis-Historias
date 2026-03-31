@@ -284,15 +284,21 @@ textarea#contenido-historia{
 .preview-grid{
   display:grid;
   grid-template-columns: repeat(auto-fit, minmax(80px,1fr));
-  gap:8px;
+  gap:10px;
+  width: 100%;
 }
 .preview-grid img{
   width:100%;
   height:80px;
-  object-fit:cover;
+  object-fit:cover; /* Clave para que no se deformen */
   border-radius:8px;
   border:1px solid rgba(255,255,255,0.03);
   box-shadow: 0 10px 28px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.preview-grid img:hover {
+  transform: scale(1.05);
+  border-color: var(--aqua);
 }
 
 /* Chat/messages styling with depth */
