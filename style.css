@@ -344,7 +344,7 @@ textarea#contenido-historia{
 button:focus, input:focus, textarea:focus{
   box-shadow: 0 0 0 4px rgba(0,255,216,0.06), 0 16px 50px rgba(0,0,0,0.6);
 }
-
+/*x*/
 /* Responsive */
 @media (max-width:920px){
   .flex-container{ flex-direction:column; }
