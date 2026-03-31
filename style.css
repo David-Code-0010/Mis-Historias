@@ -1028,3 +1028,8 @@ button:focus, input:focus, textarea:focus{
   .sidebar-aero{ width:100%; }
   .header-content{ flex-direction:column; align-items:flex-start; gap:12px; }
 }
+.formulario-aero input[type="text"],
+.formulario-aero input[type="password"],
+.formulario-aero textarea,
+#input-bot{
+  /* Todo lo demás se queda igual... */
